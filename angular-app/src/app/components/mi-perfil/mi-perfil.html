@@ -1,1 +1,20 @@
-<p>mi-perfil works!</p>
+<app-navbar />
+
+<div class="pagina">
+  <div class="contenido">
+
+    @if (usuario()) {
+      <app-in-progress />
+    } @else {
+      <div class="card-sin-sesion">
+        <div class="sin-sesion-icon">
+          <span class="mat-icon xl">lock</span>
+        </div>
+        <h3>Sin sesión iniciada</h3>
+        <p>Iniciá sesión para ver tu perfil de Gamer.</p>
+        <a href="/login" class="btn-primario">Ir al login</a>
+      </div>
+    }
+
+  </div>
+</div>

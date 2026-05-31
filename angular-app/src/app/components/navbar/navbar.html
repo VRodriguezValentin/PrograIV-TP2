@@ -1,0 +1,54 @@
+<nav class="navbar">
+  <div class="nav-inner">
+    
+    <a routerLink="/publicaciones" class="nav-logo">
+      <img src="/nexo-logo.png" alt="NEXO" class="logo-img" />
+    </a>
+
+    
+    <div class="nav-links">
+      <a routerLink="/publicaciones" routerLinkActive="activo" class="nav-link">
+        Feed
+      </a>
+      <a routerLink="/mi-perfil" routerLinkActive="activo" class="nav-link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="17" height="17">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
+      </a>
+    </div>
+
+    
+    <div class="nav-usuario">
+      @if (usuario()) {
+        <div class="avatar-wrapper" (click)="toggleMenu()">
+          <div class="avatar">{{ iniciales() }}</div>
+          <span class="nombre-usuario">{{ usuario()?.nombreUsuario }}</span>
+          <svg class="flecha" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
+            <path d="M7 10l5 5 5-5z"/>
+          </svg>
+        </div>
+        @if (menuAbierto()) {
+          <div class="dropdown">
+            <div class="dropdown-info">
+              <strong>{{ usuario()?.nombre }} {{ usuario()?.apellido }}</strong>
+              <span>{{ usuario()?.correo }}</span>
+              <span class="badge-rol" [class.admin]="usuario()?.perfil === 'administrador'">
+                <span class="mat-icon sm">{{ usuario()?.perfil === 'administrador' ? 'admin_panel_settings' : 'sports_esports' }}</span>
+              {{ usuario()?.perfil === 'administrador' ? 'Admin' : 'Usuario' }}
+              </span>
+            </div>
+            <hr />
+            <button class="dropdown-item logout" (click)="cerrarSesion()">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+                <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+              </svg>
+              Cerrar sesión
+            </button>
+          </div>
+        }
+      } @else {
+        <a routerLink="/login" class="btn-login">Iniciar sesión</a>
+      }
+    </div>
+  </div>
+</nav>

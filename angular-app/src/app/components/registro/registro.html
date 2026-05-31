@@ -1,1 +1,190 @@
-<p>registro works!</p>
+<div class="auth-page">
+  
+  <div class="auth-left">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+
+    <div class="brand">
+      <img class="brand-logo" src="/nexo-logo.png" alt="NEXO" />
+      <p class="tagline">Creá tu perfil<br>y unite a la comunidad.</p>
+    </div>
+
+    <div class="features">
+      <div class="feature-item">
+        <span class="mat-icon sm">videocam</span><span>Comparte tus highlights</span>
+      </div>
+      <div class="feature-item">
+        <span class="mat-icon sm">forum</span><span>Genera discusiones y debates</span>
+      </div>
+      <div class="feature-item">
+        <span class="mat-icon sm">group</span><span>Conecta con otros Gamers</span>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="auth-right">
+    <div class="auth-card">
+      <h2>Crear cuenta</h2>
+      <p class="subtitle">Completá los datos de tu perfil Gamer</p>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+        
+        <div class="fila-doble">
+          <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" formControlName="nombre" placeholder="Juan"
+              [class.input-error]="f['nombre'].invalid && f['nombre'].touched" />
+            @if (f['nombre'].invalid && f['nombre'].touched) {
+              <span class="msg-error">
+                @if (f['nombre'].errors?.['required']) { Requerido }
+                @else { Mínimo 2 caracteres }
+              </span>
+            }
+          </div>
+          <div class="form-group">
+            <label>Apellido</label>
+            <input type="text" formControlName="apellido" placeholder="Pérez"
+              [class.input-error]="f['apellido'].invalid && f['apellido'].touched" />
+            @if (f['apellido'].invalid && f['apellido'].touched) {
+              <span class="msg-error">
+                @if (f['apellido'].errors?.['required']) { Requerido }
+                @else { Mínimo 2 caracteres }
+              </span>
+            }
+          </div>
+        </div>
+
+        
+        <div class="form-group">
+          <label>Correo electrónico</label>
+          <input type="email" formControlName="correo" placeholder="gamer@correo.com"
+            [class.input-error]="f['correo'].invalid && f['correo'].touched" />
+          @if (f['correo'].invalid && f['correo'].touched) {
+            <span class="msg-error">
+              @if (f['correo'].errors?.['required']) { El correo es requerido }
+              @else { Ingresá un correo válido }
+            </span>
+          }
+        </div>
+
+        
+        <div class="form-group">
+          <label>Nombre de usuario (tag)</label>
+          <input type="text" formControlName="nombreUsuario" placeholder="ProGamer_99"
+            [class.input-error]="f['nombreUsuario'].invalid && f['nombreUsuario'].touched" />
+          @if (f['nombreUsuario'].invalid && f['nombreUsuario'].touched) {
+            <span class="msg-error">
+              @if (f['nombreUsuario'].errors?.['required']) { Requerido }
+              @else if (f['nombreUsuario'].errors?.['minlength']) { Mínimo 3 caracteres }
+              @else { Solo letras, números y guion bajo }
+            </span>
+          }
+        </div>
+
+        
+        <div class="fila-doble">
+          <div class="form-group">
+            <label>Contraseña</label>
+            <div class="input-con-boton">
+              <input [type]="showPw() ? 'text' : 'password'" formControlName="contrasena"
+                placeholder="8+ car., mayúscula y número"
+                [class.input-error]="f['contrasena'].invalid && f['contrasena'].touched" />
+              <button type="button" class="btn-toggle-pw" (click)="togglePw()" tabindex="-1">
+                <span class="mat-icon sm">{{ showPw() ? 'visibility_off' : 'visibility' }}</span>
+              </button>
+            </div>
+            @if (f['contrasena'].invalid && f['contrasena'].touched) {
+              <span class="msg-error">
+                @if (f['contrasena'].errors?.['required']) { La contraseña es requerida }
+                @else if (f['contrasena'].errors?.['minlength']) { Mínimo 8 caracteres }
+                @else { Debe tener al menos una mayúscula y un número }
+              </span>
+            }
+          </div>
+          <div class="form-group">
+            <label>Repetir contraseña</label>
+            <div class="input-con-boton">
+              <input [type]="showPwRepeat() ? 'text' : 'password'" formControlName="repetirContrasena"
+                placeholder="Repetí la contraseña"
+                [class.input-error]="(f['repetirContrasena'].invalid && f['repetirContrasena'].touched) || mismatch" />
+              <button type="button" class="btn-toggle-pw" (click)="togglePwRepeat()" tabindex="-1">
+                <span class="mat-icon sm">{{ showPwRepeat() ? 'visibility_off' : 'visibility' }}</span>
+              </button>
+            </div>
+            @if (f['repetirContrasena'].errors?.['required'] && f['repetirContrasena'].touched) {
+              <span class="msg-error">Repetí la contraseña</span>
+            }
+            @if (mismatch) {
+              <span class="msg-error">Las contraseñas no coinciden</span>
+            }
+          </div>
+        </div>
+
+        
+        <div class="form-group">
+          <label>Fecha de nacimiento</label>
+          <input type="date" formControlName="fechaNacimiento"
+            [class.input-error]="f['fechaNacimiento'].invalid && f['fechaNacimiento'].touched" />
+          @if (f['fechaNacimiento'].invalid && f['fechaNacimiento'].touched) {
+            <span class="msg-error">La fecha de nacimiento es requerida</span>
+          }
+        </div>
+
+        
+        <div class="form-group">
+          <label>Biografia <span class="opcional">(opcional)</span></label>
+          <textarea formControlName="descripcion" rows="2"
+            placeholder="¿Qué juegos jugás? ¿Cuál es tu rol preferido?..."></textarea>
+        </div>
+
+        
+        <div class="form-group">
+          <label>Foto de perfil <span class="opcional">(opcional)</span></label>
+          <div class="upload-area" (click)="fileInput.click()">
+            @if (previewUrl()) {
+              <img [src]="previewUrl()" alt="Preview" class="preview-img" />
+            } @else {
+              <div class="upload-placeholder">
+                <span class="mat-icon lg upload-icon">add_a_photo</span>
+                <span>Subí tu foto de Gamer</span>
+                <span class="upload-hint">JPG, PNG — máx. 5 MB</span>
+              </div>
+            }
+          </div>
+          <input #fileInput type="file" accept="image/*" (change)="onArchivo($event)" style="display:none" />
+        </div>
+
+        <button type="submit" class="btn-primario" [disabled]="loading()">
+          @if (loading()) {
+            <span class="spinner"></span> Creando cuenta...
+          } @else {
+            Unirse a NEXO
+          }
+        </button>
+      </form>
+
+      <p class="link-alternativo">
+        ¿Ya tenés cuenta? <a routerLink="/login">Iniciá sesión</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+@if (modal().visible) {
+  <div class="modal-overlay" (click)="cerrarModal()">
+    <div class="modal-caja" (click)="$event.stopPropagation()">
+      <div class="modal-icono">
+        <span class="mat-icon xl">{{ modal().tipo === 'exito' ? 'celebration' : 'warning' }}</span>
+      </div>
+      <h3>{{ modal().tipo === 'exito' ? '¡Bienvenido a NEXO!' : 'Error al registrarse' }}</h3>
+      <p>{{ modal().mensaje }}</p>
+      <button class="btn-primario" (click)="cerrarModal()">
+        {{ modal().tipo === 'exito' ? 'Ir al login' : 'Entendido' }}
+      </button>
+    </div>
+  </div>
+}

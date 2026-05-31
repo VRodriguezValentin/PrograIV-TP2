@@ -1,0 +1,218 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(11, 11, 20, 0.92);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+}
+
+.logo-img {
+  width: 120px;
+  height: 120px;
+  padding-top: 0.5rem;
+  margin-right: -1.5rem;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.4));
+}
+
+.nav-links {
+  display: flex;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.875rem;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: background 0.15s, color 0.15s;
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-primary);
+}
+
+.nav-link.activo {
+  background: rgba(0, 212, 255, 0.08);
+  color: var(--cyan);
+  font-weight: 600;
+}
+
+.nav-usuario {
+  margin-left: auto;
+  position: relative;
+}
+
+.avatar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.3rem 0.75rem 0.3rem 0.3rem;
+  border-radius: 40px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  transition: border-color 0.15s, background 0.15s;
+  user-select: none;
+}
+
+.avatar-wrapper:hover {
+  border-color: var(--cyan);
+  background: rgba(0, 212, 255, 0.06);
+}
+
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--purple) 0%, var(--cyan) 100%);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.nombre-usuario {
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.flecha {
+  fill: var(--text-muted);
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6), 0 0 20px var(--glow-purple);
+  min-width: 230px;
+  overflow: hidden;
+  animation: fadeIn 0.15s ease;
+}
+
+.dropdown-info {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.dropdown-info strong {
+  font-size: 0.875rem;
+  color: var(--text-primary);
+}
+
+.dropdown-info span {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.badge-rol {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  background: rgba(139, 47, 255, 0.15);
+  color: var(--purple);
+  font-size: 0.72rem;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.badge-rol.admin {
+  background: rgba(0, 212, 255, 0.1);
+  color: var(--cyan);
+}
+
+.dropdown hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: none;
+  border: none;
+  font-size: 0.875rem;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s;
+  font-family: inherit;
+  color: var(--text-secondary);
+}
+
+.dropdown-item:hover { background: rgba(255, 255, 255, 0.05); }
+
+.dropdown-item.logout {
+  color: var(--magenta);
+}
+
+.dropdown-item.logout svg { fill: var(--magenta); }
+
+.btn-login {
+  padding: 0.5rem 1.25rem;
+  background: linear-gradient(135deg, var(--purple) 0%, var(--cyan) 100%);
+  color: #fff;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  transition: opacity 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0 14px var(--glow-purple);
+}
+
+.btn-login:hover {
+  opacity: 0.88;
+  box-shadow: 0 0 20px var(--glow-cyan);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+  .nombre-usuario { display: none; }
+  .logo-texto { display: none; }
+}
