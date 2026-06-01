@@ -4,13 +4,6 @@
   <div class="contenido">
 
     @if (usuario()) {
-      <div class="bienvenida">
-        <div class="avatar-grande">{{ usuario()!.nombre[0] }}{{ usuario()!.apellido[0] }}</div>
-        <div>
-          <h2>¡Hola, {{ usuario()!.nombre }}!</h2>
-          <p>Bienvenido a tu feed de NEXO.</p>
-        </div>
-      </div>
     }
 
     <app-in-progress />

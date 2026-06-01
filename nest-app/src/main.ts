@@ -6,8 +6,13 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  app.useGlobalPipes(new ValidationPipe(),);
-  app.useStaticAssets(join(__dirname, '..', 'uploads'), {prefix: '/uploads/',});
+  app.useGlobalPipes(new ValidationPipe());
+  app.enableCors({
+    origin: 'http://localhost:4200',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  });
+  app.useStaticAssets(join(__dirname, '..', 'uploads'), { prefix: '/uploads/' });
   const port = process.env.PORT ?? 3000;
   await app.listen(port);
   console.log(`http://localhost:${port}`);

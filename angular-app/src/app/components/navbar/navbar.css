@@ -101,6 +101,14 @@
   flex-shrink: 0;
 }
 
+.avatar-img {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
 .nombre-usuario {
   font-size: 0.825rem;
   font-weight: 600;

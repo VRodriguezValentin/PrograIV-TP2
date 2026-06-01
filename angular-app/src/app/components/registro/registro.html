@@ -28,7 +28,7 @@
   <div class="auth-right">
     <div class="auth-card">
       <h2>Crear cuenta</h2>
-      <p class="subtitle">Completá los datos de tu perfil Gamer</p>
+      <p class="subtitle">Completá los datos de tu perfil</p>
 
       <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
 
@@ -61,7 +61,7 @@
         
         <div class="form-group">
           <label>Correo electrónico</label>
-          <input type="email" formControlName="correo" placeholder="gamer@correo.com"
+          <input type="email" formControlName="correo" placeholder="juanperez@correo.com"
             [class.input-error]="f['correo'].invalid && f['correo'].touched" />
           @if (f['correo'].invalid && f['correo'].touched) {
             <span class="msg-error">
@@ -74,7 +74,7 @@
         
         <div class="form-group">
           <label>Nombre de usuario (tag)</label>
-          <input type="text" formControlName="nombreUsuario" placeholder="ProGamer_99"
+          <input type="text" formControlName="nombreUsuario" placeholder="JuanPerez67"
             [class.input-error]="f['nombreUsuario'].invalid && f['nombreUsuario'].touched" />
           @if (f['nombreUsuario'].invalid && f['nombreUsuario'].touched) {
             <span class="msg-error">
@@ -150,7 +150,7 @@
             } @else {
               <div class="upload-placeholder">
                 <span class="mat-icon lg upload-icon">add_a_photo</span>
-                <span>Subí tu foto de Gamer</span>
+                <span>Subí tu foto de perfil</span>
                 <span class="upload-hint">JPG, PNG — máx. 5 MB</span>
               </div>
             }

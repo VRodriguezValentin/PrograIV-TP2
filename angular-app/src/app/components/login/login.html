@@ -16,7 +16,7 @@
   <div class="auth-right">
     <div class="auth-card">
       <h2>Iniciar sesión</h2>
-      <p class="subtitle">Bienvenido de vuelta, Gamer</p>
+      <p class="subtitle">Bienvenido de vuelta!</p>
 
       <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
 
@@ -26,7 +26,7 @@
             id="identificador"
             type="text"
             formControlName="identificador"
-            placeholder="tu@correo.com o gamer123"
+            placeholder="Tu correo o tu usuario"
             [class.input-error]="identificador.invalid && identificador.touched"
           />
           @if (identificador.invalid && identificador.touched) {
@@ -61,7 +61,7 @@
           @if (loading()) {
             <span class="spinner"></span> Ingresando...
           } @else {
-            Ingresar al juego
+            Ingresar a NEXO
           }
         </button>
       </form>

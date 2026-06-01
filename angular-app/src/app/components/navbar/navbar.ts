@@ -25,6 +25,15 @@ export class Navbar implements OnInit {
     return `${u.nombre[0]}${u.apellido[0]}`.toUpperCase();
   }
 
+  tieneImagen(): boolean {
+    return !!this.usuario()?.imagenPerfil;
+  }
+
+  obtenerUrlImagen(): string {
+    const u = this.usuario();
+    return u?.imagenPerfil ? `http://localhost:3000${u.imagenPerfil}` : '';
+  }
+
   cerrarSesion() {
     this.authService.logout();
     this.router.navigate(['/login']);
