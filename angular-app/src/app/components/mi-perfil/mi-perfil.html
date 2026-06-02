@@ -4,7 +4,53 @@
   <div class="contenido">
 
     @if (usuario()) {
-      <app-in-progress />
+      <div class="perfil-card">
+        <div class="perfil-body">
+          <div class="foto-wrapper">
+            @if (usuario()!.imagenPerfil) {
+              <img [src]="apiUrl + usuario()!.imagenPerfil" class="foto-perfil" alt="foto de perfil" />
+            } @else {
+              <div class="foto-initials">{{ iniciales() }}</div>
+            }
+          </div>
+
+          <div class="perfil-info">
+            <h2>{{ usuario()!.nombre }} {{ usuario()!.apellido }}</h2>
+            <p class="username">&#64;{{ usuario()!.nombreUsuario }}</p>
+            @if (usuario()!.descripcion) {
+              <p class="descripcion">{{ usuario()!.descripcion }}</p>
+            }
+            <div class="datos-extra">
+              <span class="dato">
+                <span class="mat-icon sm">mail</span>
+                {{ usuario()!.correo }}
+              </span>
+              <span class="dato">
+                <span class="mat-icon sm">cake</span>
+                {{ fechaNacimiento() }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="seccion-publicaciones">
+        <h3 class="seccion-titulo">
+          <span class="mat-icon sm">grid_on</span>
+          Publicaciones Recientes
+        </h3>
+        <div class="mis-posts">
+          @for (pub of misPublicaciones(); track pub._id) {
+            <app-publicacion
+              [pub]="pub"
+              [idUsuarioActual]="usuario()!._id"
+              [nombreUsuarioActual]="usuario()!.nombreUsuario"
+              (deleteReq)="onDeletePost($event)"
+            />
+          }
+        </div>
+      </div>
+
     } @else {
       <div class="card-sin-sesion">
         <div class="sin-sesion-icon">

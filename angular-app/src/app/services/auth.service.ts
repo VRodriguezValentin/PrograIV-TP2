@@ -2,19 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../enviroments/enviroment';
-
-export interface Usuario {
-  _id: string;
-  nombre: string;
-  apellido: string;
-  correo: string;
-  nombreUsuario: string;
-  fechaNacimiento: string;
-  descripcion: string;
-  imagenPerfil: string;
-  perfil: string;
-  createdAt: string;
-}
+import { Usuario } from '../models/usuario';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

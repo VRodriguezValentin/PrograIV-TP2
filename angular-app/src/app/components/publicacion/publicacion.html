@@ -1,0 +1,119 @@
+<div class="post-card">
+  <div class="post-header">
+    <div class="post-autor">
+      @if (pub.usuario.imagenPerfil) {
+        <img [src]="apiUrl + pub.usuario.imagenPerfil" class="post-avatar-img" [alt]="pub.usuario.nombreUsuario" />
+      } @else {
+        <div class="post-avatar">{{ iniciales(pub.usuario.nombre, pub.usuario.apellido) }}</div>
+      }
+      <div class="post-autor-info">
+        <span class="post-username">{{ pub.usuario.nombreUsuario }}</span>
+        <span class="post-tiempo">{{ tiempoRelativo(pub.createdAt) }}</span>
+      </div>
+    </div>
+
+    @if (esMiPublicacion()) {
+      <div class="post-opciones-wrapper">
+        <button class="btn-opciones" (click)="toggleDropdown()">
+          <span class="mat-icon">more_vert</span>
+        </button>
+        @if (dropdownAbierto()) {
+          <div class="opciones-dropdown">
+            <button class="opcion-item" (click)="toggleDropdown()">
+              <span class="mat-icon sm">edit</span> Editar
+            </button>
+            <button class="opcion-item opcion-eliminar" (click)="eliminar()">
+              <span class="mat-icon sm">delete</span> Eliminar
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="post-body">
+    <p class="post-texto">{{ pub.texto }}</p>
+    @if (pub.imagen) {
+      <img [src]="pub.imagen" class="post-imagen" alt="imagen de publicación" />
+    }
+  </div>
+
+  <div class="post-footer">
+    <button class="btn-accion" [class.liked]="likeDado()" (click)="toggleLike()">
+      <span class="mat-icon sm">{{ likeDado() ? 'favorite' : 'favorite_border' }}</span>
+      <span>{{ cantLikes() }}</span>
+    </button>
+    <button class="btn-accion" (click)="abrirModal()">
+      <span class="mat-icon sm">chat_bubble_outline</span>
+      <span>{{ comentariosLocales().length }}</span>
+    </button>
+  </div>
+</div>
+
+@if (modalAbierto()) {
+  <div class="modal-overlay" (click)="cerrarModal()">
+    <div class="modal-comentarios" (click)="$event.stopPropagation()">
+      <button class="btn-cerrar-modal" (click)="cerrarModal()">
+        <span class="mat-icon">close</span>
+      </button>
+
+      <div class="modal-izquierda">
+        <div class="modal-post-header">
+          @if (pub.usuario.imagenPerfil) {
+            <img [src]="apiUrl + pub.usuario.imagenPerfil" class="post-avatar-img" [alt]="pub.usuario.nombreUsuario" />
+          } @else {
+            <div class="post-avatar">{{ iniciales(pub.usuario.nombre, pub.usuario.apellido) }}</div>
+          }
+          <div class="post-autor-info">
+            <span class="post-username">{{ pub.usuario.nombreUsuario }}</span>
+            <span class="post-tiempo">{{ tiempoRelativo(pub.createdAt) }}</span>
+          </div>
+        </div>
+        <p class="modal-post-texto">{{ pub.texto }}</p>
+        @if (pub.imagen) {
+          <img [src]="pub.imagen" class="modal-post-imagen" alt="imagen" />
+        }
+        <div class="modal-post-footer">
+          <button class="btn-accion" [class.liked]="likeDado()" (click)="toggleLike()">
+            <span class="mat-icon sm">{{ likeDado() ? 'favorite' : 'favorite_border' }}</span>
+            <span>{{ cantLikes() }}</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-derecha">
+        <h4 class="modal-titulo-comentarios">Comentarios</h4>
+
+        <div class="modal-lista-comentarios">
+          @if (comentariosLocales().length === 0) {
+            <p class="sin-comentarios">Sin comentarios aún. ¡Sé el primero!</p>
+          }
+          @for (c of comentariosLocales(); track c._id) {
+            <div class="comentario-item">
+              <div class="comentario-avatar">{{ c.usuario.nombreUsuario.substring(0, 2).toUpperCase() }}</div>
+              <div class="comentario-body">
+                <span class="comentario-username">{{ c.usuario.nombreUsuario }}</span>
+                <p class="comentario-texto">{{ c.texto }}</p>
+                <span class="comentario-tiempo">{{ tiempoRelativo(c.createdAt) }}</span>
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="modal-nuevo-comentario">
+          <textarea
+            class="comentario-input"
+            placeholder="Escribí un comentario..."
+            rows="2"
+            [value]="textoComentario()"
+            (input)="onInputComentario($event)"
+            (keydown.enter)="!$any($event).shiftKey && $event.preventDefault(); !$any($event).shiftKey && enviarComentario()"
+          ></textarea>
+          <button class="btn-enviar-comentario" (click)="enviarComentario()" [disabled]="!textoComentario().trim()">
+            <span class="mat-icon">send</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

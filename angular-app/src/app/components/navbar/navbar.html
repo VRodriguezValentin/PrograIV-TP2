@@ -24,10 +24,6 @@
             <div class="dropdown-info">
               <strong>{{ usuario()?.nombre }} {{ usuario()?.apellido }}</strong>
               <span>{{ usuario()?.correo }}</span>
-              <span class="badge-rol" [class.admin]="usuario()?.perfil === 'administrador'">
-                <span class="mat-icon sm">{{ usuario()?.perfil === 'administrador' ? 'admin_panel_settings' : 'sports_esports' }}</span>
-              {{ usuario()?.perfil === 'administrador' ? 'Admin' : 'Usuario' }}
-              </span>
             </div>
             <hr />
             <a routerLink="/mi-perfil" class="dropdown-item" (click)="menuAbierto.set(false)">

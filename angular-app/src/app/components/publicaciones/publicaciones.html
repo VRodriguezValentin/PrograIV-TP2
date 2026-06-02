@@ -1,12 +1,44 @@
 <app-navbar />
 
 <div class="pagina">
-  <div class="contenido">
+  <div class="feed-layout">
 
-    @if (usuario()) {
-    }
+    <div class="feed-header">
+      <div class="orden-controls">
+        <button
+          class="btn-orden"
+          [class.activo]="orden() === 'fecha'"
+          (click)="cambiarOrden('fecha')"
+        >
+          <span class="mat-icon sm">schedule</span>
+          Recientes
+        </button>
+        <button
+          class="btn-orden"
+          [class.activo]="orden() === 'meGustas'"
+          (click)="cambiarOrden('meGustas')"
+        >
+          <span class="mat-icon sm">trending_up</span>
+          Populares
+        </button>
+      </div>
+    </div>
 
-    <app-in-progress />
+    <div class="feed-lista">
+      @for (pub of publicaciones() | ordenarPublicaciones:orden(); track pub._id) {
+        <app-publicacion
+          [pub]="pub"
+          [idUsuarioActual]="usuario()?._id ?? ''"
+          [nombreUsuarioActual]="usuario()?.nombreUsuario ?? ''"
+          (deleteReq)="onDelete($event)"
+        />
+      }
+    </div>
+
+    <div class="feed-loader">
+      <span class="mat-icon sm">expand_more</span>
+      Cargando publicaciones...
+    </div>
 
   </div>
 </div>

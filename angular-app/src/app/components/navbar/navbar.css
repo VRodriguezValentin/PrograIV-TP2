@@ -12,25 +12,31 @@
   max-width: 1100px;
   margin: 0 auto;
   padding: 0 1.5rem;
-  height: 60px;
+  height: 100px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 1.5rem;
+  position: relative;
 }
 
 .nav-logo {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.6rem;
   text-decoration: none;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .logo-img {
-  width: 120px;
-  height: 120px;
-  padding-top: 0.5rem;
-  margin-right: -1.5rem;
+  width: 200px;
+  height: 200px;
   object-fit: contain;
+  margin-bottom: -40px;
+  padding-bottom: 30px;
   filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.4));
 }
 
@@ -67,6 +73,7 @@
 .nav-usuario {
   margin-left: auto;
   position: relative;
+  margin-right: 0;
 }
 
 .avatar-wrapper {
@@ -147,24 +154,6 @@
 .dropdown-info span {
   font-size: 0.78rem;
   color: var(--text-secondary);
-}
-
-.badge-rol {
-  display: inline-flex;
-  align-items: center;
-  margin-top: 0.35rem;
-  padding: 0.2rem 0.6rem;
-  border-radius: 20px;
-  background: rgba(139, 47, 255, 0.15);
-  color: var(--purple);
-  font-size: 0.72rem;
-  font-weight: 600;
-  width: fit-content;
-}
-
-.badge-rol.admin {
-  background: rgba(0, 212, 255, 0.1);
-  color: var(--cyan);
 }
 
 .dropdown hr {
