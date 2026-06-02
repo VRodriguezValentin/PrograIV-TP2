@@ -1,40 +1,19 @@
-import {
-  Body,
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Post,
-  UploadedFile,
-  UseInterceptors,
-} from '@nestjs/common';
+import { BadRequestException, Body, Controller, HttpCode, HttpStatus, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
+import { memoryStorage } from 'multer';
 import { AutenticacionService } from './autenticacion.service';
 import { RegistroDto } from './dto/registro.dto';
 import { LoginDto } from './dto/login.dto';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 const multerConfig = {
-  storage: diskStorage({
-    destination: './uploads',
-    filename: (_req, file, cb) => {
-      const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-      cb(null, `perfil-${uniqueSuffix}${extname(file.originalname)}`);
-    },
-  }),
-  fileFilter: (_req: unknown, file: Express.Multer.File, cb: (error: Error | null, accept: boolean) => void) => {
-    if (file.mimetype.match(/\/(jpg|jpeg|png|gif|webp)$/)) {
-      cb(null, true);
-    } else {
-      cb(new Error('Solo se permiten imágenes (jpg, jpeg, png, gif, webp)'), false);
-    }
-  },
+  storage: memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024 },
 };
 
 @Controller('autenticacion')
 export class AutenticacionController {
-  constructor(private readonly autenticacionService: AutenticacionService) {}
+  constructor(private readonly autenticacionService: AutenticacionService, private readonly cloudinaryService: CloudinaryService,) {}
 
   @Post('registro')
   @HttpCode(HttpStatus.CREATED)
@@ -43,7 +22,13 @@ export class AutenticacionController {
     @Body() dto: RegistroDto,
     @UploadedFile() file?: Express.Multer.File,
   ) {
-    const imagenUrl = file ? `/uploads/${file.filename}` : '';
+    if (file && !file.mimetype.match(/\/(jpg|jpeg|webp|gif)$/)) {
+      throw new BadRequestException('Solo se permiten imágenes\n(jpg, jpeg, webp, gif)');
+    }
+
+    const imagenUrl = file
+      ? (await this.cloudinaryService.uploadImage(file)).secure_url
+      : '';
     return this.autenticacionService.registro(dto, imagenUrl);
   }
 

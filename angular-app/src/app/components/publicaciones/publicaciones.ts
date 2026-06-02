@@ -1,10 +1,11 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Navbar } from '../navbar/navbar';
-import { PublicacionComponent, PublicacionData } from '../publicacion/publicacion';
+import { PublicacionComponent } from '../publicacion/publicacion';
 import { OrdenarPublicacionesPipe } from '../../pipes/ordenar-publicaciones.pipe';
 import { AuthService } from '../../services/auth.service';
 import { Usuario } from '../../models/usuario';
+import { PublicacionData } from '../../models/publicacion-data';
 
 type OrdenFeed = 'fecha' | 'meGustas';
 

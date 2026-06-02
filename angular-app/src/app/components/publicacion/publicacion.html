@@ -2,7 +2,7 @@
   <div class="post-header">
     <div class="post-autor">
       @if (pub.usuario.imagenPerfil) {
-        <img [src]="apiUrl + pub.usuario.imagenPerfil" class="post-avatar-img" [alt]="pub.usuario.nombreUsuario" />
+        <img [src]="pub.usuario.imagenPerfil" class="post-avatar-img" [alt]="pub.usuario.nombreUsuario" />
       } @else {
         <div class="post-avatar">{{ iniciales(pub.usuario.nombre, pub.usuario.apellido) }}</div>
       }
@@ -60,7 +60,7 @@
       <div class="modal-izquierda">
         <div class="modal-post-header">
           @if (pub.usuario.imagenPerfil) {
-            <img [src]="apiUrl + pub.usuario.imagenPerfil" class="post-avatar-img" [alt]="pub.usuario.nombreUsuario" />
+            <img [src]="pub.usuario.imagenPerfil.startsWith('http') ? pub.usuario.imagenPerfil : apiUrl + pub.usuario.imagenPerfil" class="post-avatar-img" [alt]="pub.usuario.nombreUsuario" />
           } @else {
             <div class="post-avatar">{{ iniciales(pub.usuario.nombre, pub.usuario.apellido) }}</div>
           }
@@ -90,7 +90,9 @@
           }
           @for (c of comentariosLocales(); track c._id) {
             <div class="comentario-item">
-              <div class="comentario-avatar">{{ c.usuario.nombreUsuario.substring(0, 2).toUpperCase() }}</div>
+              @if (c.usuario.imagenPerfil) {
+                <img [src]="c.usuario.imagenPerfil" class="comentario-avatar" [alt]="c.usuario.nombreUsuario.substring(0, 2).toUpperCase()" />
+              }
               <div class="comentario-body">
                 <span class="comentario-username">{{ c.usuario.nombreUsuario }}</span>
                 <p class="comentario-texto">{{ c.texto }}</p>

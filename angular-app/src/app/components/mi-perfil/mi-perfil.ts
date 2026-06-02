@@ -34,11 +34,9 @@ export class MiPerfil implements OnInit {
   fechaNacimiento(): string {
     const u = this.usuario();
     if (!u?.fechaNacimiento) return 'Fecha no disponible';
-    return new Date(u.fechaNacimiento).toLocaleDateString('es-AR', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric'
-    });
+    const fechaStr = u.fechaNacimiento.toString().split('T')[0];
+    const [year, month, day] = fechaStr.split('-').map(Number);
+    return day.toString().padStart(2, '0') + '/' + month.toString().padStart(2, '0') + '/' + year;
   }
 
   onDeletePost(id: string) {

@@ -31,11 +31,6 @@ export class Navbar implements OnInit {
     return !!this.usuario()?.imagenPerfil;
   }
 
-  obtenerUrlImagen(): string {
-    const u = this.usuario();
-    return u?.imagenPerfil ? `${environment.apiUrl}${u.imagenPerfil}` : '';
-  }
-
   cerrarSesion() {
     this.authService.logout();
     this.router.navigate(['/login']);

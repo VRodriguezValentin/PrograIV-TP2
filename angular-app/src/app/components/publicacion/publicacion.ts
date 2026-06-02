@@ -1,29 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../enviroments/enviroment';
+import { PublicacionData } from '../../models/publicacion-data';
+import { ComentarioData } from '../../models/comentario-data';
 
-export interface ComentarioData {
-  _id: string;
-  usuario: { _id: string; nombreUsuario: string; imagenPerfil: string; };
-  texto: string;
-  createdAt: Date;
-}
-
-export interface PublicacionData {
-  _id: string;
-  usuario: {
-    _id: string;
-    nombreUsuario: string;
-    imagenPerfil: string;
-    nombre: string;
-    apellido: string;
-  };
-  texto: string;
-  imagen?: string;
-  meGustas: string[];
-  comentarios: ComentarioData[];
-  createdAt: Date;
-}
+export type { PublicacionData } from '../../models/publicacion-data';
 
 @Component({
   selector: 'app-publicacion',

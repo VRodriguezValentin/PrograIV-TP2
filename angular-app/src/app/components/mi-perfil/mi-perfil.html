@@ -8,7 +8,7 @@
         <div class="perfil-body">
           <div class="foto-wrapper">
             @if (usuario()!.imagenPerfil) {
-              <img [src]="apiUrl + usuario()!.imagenPerfil" class="foto-perfil" alt="foto de perfil" />
+              <img [src]="usuario()!.imagenPerfil" class="foto-perfil" alt="foto de perfil" />
             } @else {
               <div class="foto-initials">{{ iniciales() }}</div>
             }
