@@ -2,6 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService, Usuario } from '../../services/auth.service';
+import { environment } from '../../../enviroments/enviroment';
 
 @Component({
   selector: 'app-navbar',
@@ -31,7 +32,7 @@ export class Navbar implements OnInit {
 
   obtenerUrlImagen(): string {
     const u = this.usuario();
-    return u?.imagenPerfil ? `http://localhost:3000${u.imagenPerfil}` : '';
+    return u?.imagenPerfil ? `${environment.apiUrl}${u.imagenPerfil}` : '';
   }
 
   cerrarSesion() {

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
+import { environment } from '../../enviroments/enviroment';
 
 export interface Usuario {
   _id: string;
@@ -17,7 +18,7 @@ export interface Usuario {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  readonly API_URL = 'http://localhost:3000';
+  readonly API_URL = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
