@@ -25,7 +25,7 @@ El sistema implementa autenticación mediante JWT, control de roles (usuario y a
 * TypeScript
 * JWT Authentication
 * bcrypt
-* Multer
+* Multer + Cloudinary
 
 ### Base de datos
 
@@ -113,6 +113,7 @@ git clone <url-del-repositorio>
 ```bash
 cd nest-app
 npm install
+cp .env.example .env
 npm run start:dev
 ```
 
@@ -122,18 +123,6 @@ npm run start:dev
 cd angular-app
 npm install
 ng serve
-```
-
----
-
-## Variables de entorno Backend
-
-Crear un archivo `.env`:
-
-```env
-MONGO_URL=<cadena_de_conexion_mongodb>
-JWT_SECRET=<clave_secreta>
-JWT_EXPIRES_IN=15m
 ```
 
 ---
