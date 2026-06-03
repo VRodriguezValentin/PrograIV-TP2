@@ -381,8 +381,7 @@
 
 .btn-primario {
   width: 100%;
-  padding: 0.9rem;
-  background: linear-gradient(135deg, var(--purple) 0%, var(--cyan) 100%);
+  padding: 0.95rem;
   color: #fff;
   border: none;
   border-radius: var(--radius-md);
@@ -395,14 +394,19 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
-  box-shadow: 0 0 20px var(--glow-purple);
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--purple), var(--cyan), var(--magenta));
+  background-size: 300% 300%;
+  animation: nexoGradientMove 8s ease infinite;
+  box-shadow: 0 0 18px rgba(0, 212, 255, 0.18);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, filter 0.2s ease;
 }
 
 .btn-primario:hover:not(:disabled) {
-  opacity: 0.9;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 24px var(--glow-cyan);
+  opacity: 0.98;
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
 }
 
 .btn-primario:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -497,9 +501,170 @@
   .auth-left { display: none; }
 }
 
-@media (max-width: 600px) {
-  .fila-doble { grid-template-columns: 1fr; }
-  .auth-card { padding: 1.5rem; }
-  .auth-right { padding: 1.5rem 1rem; }
-  .radio-group { flex-direction: column; }
+@media (max-width: 768px) {
+  .auth-page { padding: 1.5rem 1rem; }
+
+  .auth-right {
+    padding: 1.5rem 1rem;
+  }
+
+  .auth-card {
+    padding: 2rem 1.5rem;
+    max-width: 100%;
+    border-radius: var(--radius-lg);
+  }
+
+  .auth-card h2 {
+    font-size: 1.5rem;
+  }
+
+  .fila-doble {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .radio-group {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 0.7rem 0.9rem;
+    font-size: 0.9rem;
+  }
+
+  .upload-area {
+    padding: 1rem;
+    min-height: 100px;
+  }
+
+  .btn-primario {
+    padding: 0.8rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-page {
+    padding: 1rem 0.75rem;
+  }
+
+  .auth-right {
+    padding: 1rem;
+  }
+
+  .auth-card {
+    padding: 1.5rem 1.25rem;
+    border-radius: var(--radius-md);
+  }
+
+  .auth-card h2 {
+    font-size: 1.3rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .subtitle {
+    font-size: 0.8rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .form-group {
+    margin-bottom: 0.9rem;
+  }
+
+  .form-group label {
+    font-size: 0.75rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 0.65rem 0.85rem;
+    font-size: 0.85rem;
+  }
+
+  .form-group textarea {
+    min-height: 80px;
+  }
+
+  .fila-doble {
+    gap: 0.75rem;
+  }
+
+  .upload-area {
+    padding: 0.9rem;
+    min-height: 90px;
+    border-radius: var(--radius-md);
+  }
+
+  .upload-placeholder {
+    gap: 0.25rem;
+    font-size: 0.8rem;
+  }
+
+  .upload-icon {
+    font-size: 1.5rem;
+  }
+
+  .upload-hint {
+    font-size: 0.7rem;
+  }
+
+  .preview-img {
+    max-height: 100px;
+  }
+
+  .radio-group {
+    gap: 0.5rem;
+  }
+
+  .radio-label {
+    padding: 0.75rem 0.9rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .radio-titulo {
+    font-size: 0.8rem;
+  }
+
+  .radio-desc {
+    font-size: 0.7rem;
+  }
+
+  .btn-primario {
+    padding: 0.7rem;
+    font-size: 0.85rem;
+    margin-top: 0.35rem;
+  }
+
+  .link-alternativo {
+    margin-top: 1rem;
+    font-size: 0.8rem;
+  }
+
+  .modal-caja {
+    padding: 1.5rem 1.25rem;
+    max-width: 95%;
+    border-radius: var(--radius-lg);
+  }
+
+  .modal-icono {
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .modal-caja h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .modal-caja p {
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+  }
+
+  .modal-caja .btn-primario {
+    max-width: 100%;
+  }
 }

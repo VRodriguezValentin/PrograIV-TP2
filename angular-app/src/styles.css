@@ -72,3 +72,31 @@ input, textarea, select { font-family: inherit; }
 .mat-icon.sm { font-size: 16px; }
 .mat-icon.lg { font-size: 28px; }
 .mat-icon.xl { font-size: 40px; }
+
+@keyframes nexoGradientMove {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.nexo-gradient-text {
+  color: transparent;
+  background: linear-gradient(90deg, var(--cyan), var(--purple), var(--magenta));
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.nexo-gradient-btn {
+  background: linear-gradient(135deg, var(--purple), var(--cyan), var(--magenta));
+  background-size: 300% 300%;
+  animation: nexoGradientMove 10s ease infinite;
+  box-shadow: 0 0 18px rgba(0, 212, 255, 0.18);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, filter 0.2s ease;
+}
+
+.nexo-gradient-btn:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 10px 30px rgba(0, 212, 255, 0.32);
+  filter: saturate(1.08);
+}
+
