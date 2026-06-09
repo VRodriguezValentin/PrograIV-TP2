@@ -22,23 +22,91 @@
           Populares
         </button>
       </div>
+      @if (usuario()) {
+        <button class="btn-toggle-crear" [class.cancelar]="mostrarCrear()" (click)="toggleCrear()">
+          <span class="mat-icon sm">{{ mostrarCrear() ? 'close' : 'add' }}</span>
+          {{ mostrarCrear() ? 'Cancelar' : 'Agregar' }}
+        </button>
+      }
     </div>
 
+    @if (mostrarCrear()) {
+      <div class="crear-card">
+        <textarea
+          class="crear-textarea"
+          placeholder=""
+          rows="3"
+          [value]="textoNueva()"
+          (input)="onTextoNuevaChange($event)"
+        ></textarea>
+        @if (imagenPreview()) {
+          <div class="imagen-preview-wrapper">
+            <img [src]="imagenPreview()!" class="imagen-preview" alt="Preview" />
+            <button class="btn-quitar-imagen" (click)="quitarImagen()" type="button">
+              <span class="mat-icon sm">close</span>
+            </button>
+          </div>
+        }
+        <div class="crear-footer">
+          <label class="btn-imagen-label">
+            <span class="mat-icon sm">add_photo_alternate</span>
+            Imagen
+            <input type="file" accept="image/*" hidden (change)="onImagenNuevaChange($event)" />
+          </label>
+          @if (imagenNueva() && !imagenPreview()) {
+            <span class="nombre-imagen">{{ imagenNueva()!.name }}</span>
+          }
+          <button
+            class="btn-publicar"
+            (click)="crearPublicacion()"
+            [disabled]="!textoNueva().trim() || creando()"
+          >
+            <span class="mat-icon sm">send</span>
+            {{ creando() ? 'Publicando...' : 'Publicar' }}
+          </button>
+        </div>
+      </div>
+    }
+
+    @if (cargando() && publicaciones().length === 0) {
+      <div class="feed-loader">
+        <span class="mat-icon sm">hourglass_empty</span>
+        Cargando publicaciones...
+      </div>
+    }
+
     <div class="feed-lista">
-      @for (pub of publicaciones() | ordenarPublicaciones:orden(); track pub._id) {
+      @for (pub of publicaciones(); track pub._id) {
         <app-publicacion
           [pub]="pub"
           [idUsuarioActual]="usuario()?._id ?? ''"
           [nombreUsuarioActual]="usuario()?.nombreUsuario ?? ''"
+          [imagenPerfilActual]="usuario()?.imagenPerfil ?? ''"
           (deleteReq)="onDelete($event)"
         />
       }
     </div>
 
-    <div class="feed-loader">
-      <span class="mat-icon sm">expand_more</span>
-      Cargando publicaciones...
-    </div>
+    @if (!cargando() && publicaciones().length === 0) {
+      <div class="feed-vacio">
+        <span class="mat-icon lg">sentiment_dissatisfied</span>
+        <p>Todavia no hay publicaciones.</p>
+      </div>
+    }
+
+    @if (!cargando() && hayMas() && publicaciones().length > 0) {
+      <button class="btn-cargar-mas" (click)="cargarMas()">
+        <span class="mat-icon sm">expand_more</span>
+        Cargar mas
+      </button>
+    }
+
+    @if (cargando() && publicaciones().length > 0) {
+      <div class="feed-loader">
+        <span class="mat-icon sm">hourglass_empty</span>
+        Cargando...
+      </div>
+    }
 
   </div>
 </div>

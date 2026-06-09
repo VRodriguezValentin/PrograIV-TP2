@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { PublicacionData } from '../components/publicacion/publicacion';
+import { PublicacionData } from '../models/publicacion-data';
 
 @Pipe({
   name: 'ordenarPublicaciones',

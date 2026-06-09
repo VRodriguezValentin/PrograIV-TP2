@@ -45,8 +45,15 @@
               [pub]="pub"
               [idUsuarioActual]="usuario()!._id"
               [nombreUsuarioActual]="usuario()!.nombreUsuario"
+              [imagenPerfilActual]="usuario()!.imagenPerfil"
               (deleteReq)="onDeletePost($event)"
             />
+          }
+          @if (!cargandoPosts() && misPublicaciones().length === 0) {
+            <div class="mis-posts-vacio">
+              <span class="mat-icon lg">sentiment_dissatisfied</span>
+              <p>Todavia no publicaste nada.</p>
+            </div>
           }
         </div>
       </div>

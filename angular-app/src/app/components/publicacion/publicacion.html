@@ -19,9 +19,6 @@
         </button>
         @if (dropdownAbierto()) {
           <div class="opciones-dropdown">
-            <button class="opcion-item" (click)="toggleDropdown()">
-              <span class="mat-icon sm">edit</span> Editar
-            </button>
             <button class="opcion-item opcion-eliminar" (click)="eliminar()">
               <span class="mat-icon sm">delete</span> Eliminar
             </button>
@@ -34,7 +31,7 @@
   <div class="post-body">
     <p class="post-texto">{{ pub.texto }}</p>
     @if (pub.imagen) {
-      <img [src]="pub.imagen" class="post-imagen" alt="imagen de publicación" />
+      <img [src]="pub.imagen" class="post-imagen" alt="imagen de publicacion" />
     }
   </div>
 
@@ -45,7 +42,7 @@
     </button>
     <button class="btn-accion" (click)="abrirModal()">
       <span class="mat-icon sm">chat_bubble_outline</span>
-      <span>{{ comentariosLocales().length }}</span>
+      <span>{{ comentariosTotales() }}</span>
     </button>
   </div>
 </div>
@@ -60,7 +57,7 @@
       <div class="modal-izquierda">
         <div class="modal-post-header">
           @if (pub.usuario.imagenPerfil) {
-            <img [src]="pub.usuario.imagenPerfil.startsWith('http') ? pub.usuario.imagenPerfil : apiUrl + pub.usuario.imagenPerfil" class="post-avatar-img" [alt]="pub.usuario.nombreUsuario" />
+            <img [src]="pub.usuario.imagenPerfil" class="post-avatar-img" [alt]="pub.usuario.nombreUsuario" />
           } @else {
             <div class="post-avatar">{{ iniciales(pub.usuario.nombre, pub.usuario.apellido) }}</div>
           }
@@ -82,16 +79,20 @@
       </div>
 
       <div class="modal-derecha">
-        <h4 class="modal-titulo-comentarios">Comentarios</h4>
+        <h4 class="modal-titulo-comentarios">Comentarios ({{ comentariosTotales() }})</h4>
 
         <div class="modal-lista-comentarios">
-          @if (comentariosLocales().length === 0) {
-            <p class="sin-comentarios">Sin comentarios aún. ¡Sé el primero!</p>
+          @if (cargandoComentarios() && comentariosLocales().length === 0) {
+            <p class="sin-comentarios">Cargando...</p>
+          } @else if (!cargandoComentarios() && comentariosLocales().length === 0) {
+            <p class="sin-comentarios">Sin comentarios aun. Se el primero!</p>
           }
           @for (c of comentariosLocales(); track c._id) {
             <div class="comentario-item">
               @if (c.usuario.imagenPerfil) {
-                <img [src]="c.usuario.imagenPerfil" class="comentario-avatar" [alt]="c.usuario.nombreUsuario.substring(0, 2).toUpperCase()" />
+                <img [src]="c.usuario.imagenPerfil" class="comentario-avatar-img" [alt]="c.usuario.nombreUsuario" />
+              } @else {
+                <div class="comentario-avatar">{{ c.usuario.nombreUsuario.substring(0, 2).toUpperCase() }}</div>
               }
               <div class="comentario-body">
                 <span class="comentario-username">{{ c.usuario.nombreUsuario }}</span>
@@ -102,10 +103,22 @@
           }
         </div>
 
+        @if (cargandoComentarios() && comentariosLocales().length > 0) {
+          <div class="comentarios-loader">
+            <span class="mat-icon sm">hourglass_empty</span>
+            Cargando...
+          </div>
+        } @else if (!cargandoComentarios() && hayMasComentarios()) {
+          <button class="btn-cargar-mas-comentarios" (click)="cargarMasComentarios()">
+            <span class="mat-icon sm">expand_more</span>
+            Cargar mas comentarios
+          </button>
+        }
+
         <div class="modal-nuevo-comentario">
           <textarea
             class="comentario-input"
-            placeholder="Escribí un comentario..."
+            placeholder="Escribi un comentario..."
             rows="2"
             [value]="textoComentario()"
             (input)="onInputComentario($event)"

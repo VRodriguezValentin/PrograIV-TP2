@@ -13,5 +13,6 @@ export interface PublicacionData {
     imagen?: string;
     meGustas: string[];
     comentarios: ComentarioData[];
+    comentariosTotales?: number;
     createdAt: Date;
 }

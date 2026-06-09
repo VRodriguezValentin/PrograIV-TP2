@@ -27,7 +27,7 @@ export class AutenticacionController {
     }
 
     const imagenUrl = file
-      ? (await this.cloudinaryService.uploadImage(file)).secure_url
+      ? (await this.cloudinaryService.uploadToFolder(file, 'foto-perfil')).secure_url
       : '';
     return this.autenticacionService.registro(dto, imagenUrl);
   }
