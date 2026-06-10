@@ -18,6 +18,31 @@ function contrasenasIguales(control: AbstractControl): ValidationErrors | null {
   return null;
 }
 
+function validarFechaNacimiento(control: AbstractControl): ValidationErrors | null {
+  if (!control.value) return null;
+
+  const fecha = new Date(control.value);
+  const hoy = new Date();
+
+  if (fecha > hoy) return { fechaFutura: true };
+
+  let edad = hoy.getFullYear() - fecha.getFullYear();
+  const mesActual = hoy.getMonth();
+  const mesNacimiento = fecha.getMonth();
+  const diaActual = hoy.getDate();
+  const diaNacimiento = fecha.getDate();
+
+  if (mesActual < mesNacimiento || (mesActual === mesNacimiento && diaActual < diaNacimiento)) {
+    edad--;
+  }
+
+  if (edad < 18) return { menorDeEdad: true };
+
+  if (edad > 100) return { mayorA100Años: true };
+
+  return null;
+}
+
 @Component({
   selector: 'app-registro',
   imports: [ReactiveFormsModule, CommonModule, RouterLink],
@@ -63,7 +88,7 @@ export class Registro {
           ],
         ],
         repetirContrasena: ['', Validators.required],
-        fechaNacimiento: ['', Validators.required],
+        fechaNacimiento: ['', [Validators.required, validarFechaNacimiento]],
         descripcion: [''],
         perfil: ['usuario'],
       },
