@@ -41,7 +41,8 @@
             @if (f['nombre'].invalid && f['nombre'].touched) {
               <span class="msg-error">
                 @if (f['nombre'].errors?.['required']) { Requerido }
-                @else { Mínimo 2 caracteres }
+                @else if (f['nombre'].errors?.['minlength']) { Mínimo 2 caracteres }
+                @else if (f['nombre'].errors?.['pattern']) { Solo letras }
               </span>
             }
           </div>
@@ -52,7 +53,8 @@
             @if (f['apellido'].invalid && f['apellido'].touched) {
               <span class="msg-error">
                 @if (f['apellido'].errors?.['required']) { Requerido }
-                @else { Mínimo 2 caracteres }
+                @else if (f['apellido'].errors?.['minlength']) { Mínimo 2 caracteres }
+                @else if (f['apellido'].errors?.['pattern']) { Solo letras }
               </span>
             }
           </div>
@@ -130,7 +132,12 @@
           <input type="date" formControlName="fechaNacimiento"
             [class.input-error]="f['fechaNacimiento'].invalid && f['fechaNacimiento'].touched" />
           @if (f['fechaNacimiento'].invalid && f['fechaNacimiento'].touched) {
-            <span class="msg-error">La fecha de nacimiento es requerida</span>
+            <span class="msg-error">
+              @if (f['fechaNacimiento'].errors?.['required']) { La fecha de nacimiento es requerida }
+              @else if (f['fechaNacimiento'].errors?.['fechaFutura']) { Usted todavia no ha nacido 💀 }
+              @else if (f['fechaNacimiento'].errors?.['menorDeEdad']) { No se admiten menores de edad }
+              @else if (f['fechaNacimiento'].errors?.['mayorA100Años']) { No se admiten mayores de 100 años }
+            </span>
           }
         </div>
 
