@@ -26,7 +26,8 @@ const multerConfig = {
 const COOKIE_OPTS = {
   httpOnly: true,
   maxAge: 15 * 60 * 1000,
-  sameSite: 'lax' as const,
+  sameSite: 'none' as const,
+  secure: true,
 };
 
 @Controller('autenticacion')
@@ -84,7 +85,7 @@ export class AutenticacionController {
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   logout(@Res({ passthrough: true }) res: any) {
-    res.clearCookie('nexo_token');
+    res.clearCookie('nexo_token', { httpOnly: true, sameSite: 'none', secure: true });
     return { ok: true };
   }
 }

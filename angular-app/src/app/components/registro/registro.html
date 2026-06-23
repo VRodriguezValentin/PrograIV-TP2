@@ -36,24 +36,26 @@
         <div class="fila-doble">
           <div class="form-group">
             <label>Nombre</label>
-            <input type="text" formControlName="nombre" placeholder="Juan"
+            <input type="text" formControlName="nombre" placeholder="Juan" maxlength="50"
               [class.input-error]="f['nombre'].invalid && f['nombre'].touched" />
             @if (f['nombre'].invalid && f['nombre'].touched) {
               <span class="msg-error">
                 @if (f['nombre'].errors?.['required']) { Requerido }
                 @else if (f['nombre'].errors?.['minlength']) { Mínimo 2 caracteres }
+                @else if (f['nombre'].errors?.['maxlength']) { Máximo 50 caracteres }
                 @else if (f['nombre'].errors?.['pattern']) { Solo letras }
               </span>
             }
           </div>
           <div class="form-group">
             <label>Apellido</label>
-            <input type="text" formControlName="apellido" placeholder="Pérez"
+            <input type="text" formControlName="apellido" placeholder="Pérez" maxlength="50"
               [class.input-error]="f['apellido'].invalid && f['apellido'].touched" />
             @if (f['apellido'].invalid && f['apellido'].touched) {
               <span class="msg-error">
                 @if (f['apellido'].errors?.['required']) { Requerido }
                 @else if (f['apellido'].errors?.['minlength']) { Mínimo 2 caracteres }
+                @else if (f['apellido'].errors?.['maxlength']) { Máximo 50 caracteres }
                 @else if (f['apellido'].errors?.['pattern']) { Solo letras }
               </span>
             }
@@ -63,11 +65,12 @@
         
         <div class="form-group">
           <label>Correo electrónico</label>
-          <input type="email" formControlName="correo" placeholder="juanperez@correo.com"
+          <input type="email" formControlName="correo" placeholder="juanperez@correo.com" maxlength="100"
             [class.input-error]="f['correo'].invalid && f['correo'].touched" />
           @if (f['correo'].invalid && f['correo'].touched) {
             <span class="msg-error">
               @if (f['correo'].errors?.['required']) { El correo es requerido }
+              @else if (f['correo'].errors?.['maxlength']) { Máximo 100 caracteres }
               @else { Ingresá un correo válido }
             </span>
           }
@@ -76,12 +79,13 @@
         
         <div class="form-group">
           <label>Nombre de usuario (tag)</label>
-          <input type="text" formControlName="nombreUsuario" placeholder="JuanPerez67"
+          <input type="text" formControlName="nombreUsuario" placeholder="JuanPerez67" maxlength="20"
             [class.input-error]="f['nombreUsuario'].invalid && f['nombreUsuario'].touched" />
           @if (f['nombreUsuario'].invalid && f['nombreUsuario'].touched) {
             <span class="msg-error">
               @if (f['nombreUsuario'].errors?.['required']) { Requerido }
               @else if (f['nombreUsuario'].errors?.['minlength']) { Mínimo 3 caracteres }
+              @else if (f['nombreUsuario'].errors?.['maxlength']) { Máximo 20 caracteres }
               @else { Solo letras, números y guion bajo }
             </span>
           }
@@ -93,7 +97,7 @@
             <label>Contraseña</label>
             <div class="input-con-boton">
               <input [type]="showPw() ? 'text' : 'password'" formControlName="contrasena"
-                placeholder="8+ car., mayúscula y número"
+                placeholder="8+ car., mayúscula y número" maxlength="64"
                 [class.input-error]="f['contrasena'].invalid && f['contrasena'].touched" />
               <button type="button" class="btn-toggle-pw" (click)="togglePw()" tabindex="-1">
                 <span class="mat-icon sm">{{ showPw() ? 'visibility_off' : 'visibility' }}</span>
@@ -103,6 +107,7 @@
               <span class="msg-error">
                 @if (f['contrasena'].errors?.['required']) { La contraseña es requerida }
                 @else if (f['contrasena'].errors?.['minlength']) { Mínimo 8 caracteres }
+                @else if (f['contrasena'].errors?.['maxlength']) { Máximo 64 caracteres }
                 @else { Debe tener al menos una mayúscula y un número }
               </span>
             }
@@ -144,8 +149,13 @@
         
         <div class="form-group">
           <label>Biografia <span class="opcional">(opcional)</span></label>
-          <textarea formControlName="descripcion" rows="2"
-            placeholder="¿Qué juegos jugás? ¿Cuál es tu rol preferido?..."></textarea>
+          <textarea formControlName="descripcion" rows="2" maxlength="200"
+            placeholder="¿Qué juegos jugás? ¿Cuál es tu rol preferido?..."
+            [class.input-error]="f['descripcion'].invalid && f['descripcion'].touched"></textarea>
+          <span class="char-counter">{{ form.get('descripcion')?.value?.length ?? 0 }}/200</span>
+          @if (f['descripcion'].errors?.['maxlength'] && f['descripcion'].touched) {
+            <span class="msg-error">Máximo 200 caracteres</span>
+          }
         </div>
 
         

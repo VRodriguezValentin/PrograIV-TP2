@@ -68,14 +68,15 @@ export class Registro {
   ) {
     this.form = this.fb.group(
       {
-        nombre: ['', [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-Za-zÀ-ÿ\s'-]+$/)]],
-        apellido: ['', [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-Za-zÀ-ÿ\s'-]+$/)]],
-        correo: ['', [Validators.required, Validators.email]],
+        nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern(/^[A-Za-zÀ-ÿ\s'-]+$/)]],
+        apellido: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern(/^[A-Za-zÀ-ÿ\s'-]+$/)]],
+        correo: ['', [Validators.required, Validators.email, Validators.maxLength(100)]],
         nombreUsuario: [
           '',
           [
             Validators.required,
             Validators.minLength(3),
+            Validators.maxLength(20),
             Validators.pattern(/^[a-zA-Z0-9_]+$/),
           ],
         ],
@@ -84,12 +85,13 @@ export class Registro {
           [
             Validators.required,
             Validators.minLength(8),
+            Validators.maxLength(64),
             Validators.pattern(/^(?=.*[A-Z])(?=.*\d)/),
           ],
         ],
         repetirContrasena: ['', Validators.required],
         fechaNacimiento: ['', [Validators.required, validarFechaNacimiento]],
-        descripcion: [''],
+        descripcion: ['', Validators.maxLength(200)],
         perfil: ['usuario'],
       },
       { validators: contrasenasIguales },
