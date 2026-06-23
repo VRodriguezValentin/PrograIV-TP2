@@ -44,8 +44,7 @@
             <app-publicacion
               [pub]="pub"
               [idUsuarioActual]="usuario()!._id"
-              [nombreUsuarioActual]="usuario()!.nombreUsuario"
-              [imagenPerfilActual]="usuario()!.imagenPerfil"
+              [detallePath]="'/mi-perfil'"
               (deleteReq)="onDeletePost($event)"
             />
           }
@@ -71,3 +70,5 @@
 
   </div>
 </div>
+
+<router-outlet />

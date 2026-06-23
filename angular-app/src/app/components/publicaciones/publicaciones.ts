@@ -1,5 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { RouterOutlet } from '@angular/router';
 import { Navbar } from '../navbar/navbar';
 import { PublicacionComponent } from '../publicacion/publicacion';
 import { AuthService } from '../../services/auth.service';
@@ -11,7 +11,7 @@ type OrdenFeed = 'fecha' | 'meGustas';
 
 @Component({
   selector: 'app-publicaciones',
-  imports: [CommonModule, Navbar, PublicacionComponent],
+  imports: [Navbar, PublicacionComponent, RouterOutlet],
   templateUrl: './publicaciones.html',
   styleUrl: './publicaciones.css',
 })

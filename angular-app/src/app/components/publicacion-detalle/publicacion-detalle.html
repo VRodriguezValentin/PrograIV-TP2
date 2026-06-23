@@ -1,0 +1,138 @@
+<div class="modal-overlay" (click)="cerrarModal()">
+  <div class="modal-comentarios" (click)="$event.stopPropagation()">
+
+    <button class="btn-cerrar-modal" (click)="cerrarModal()">
+      <span class="mat-icon">close</span>
+    </button>
+
+    @if (cargando()) {
+      <div class="modal-cargando">
+        <div class="spinner"></div>
+      </div>
+    } @else if (errorMsg()) {
+      <div class="modal-cargando">
+        <span class="mat-icon lg">error_outline</span>
+        <p>{{ errorMsg() }}</p>
+      </div>
+    } @else if (pub()) {
+
+      <!-- Izquierda: publicación -->
+      <div class="modal-izquierda">
+        <div class="modal-post-header">
+          @if (pub()!.usuario.imagenPerfil) {
+            <img [src]="pub()!.usuario.imagenPerfil" class="post-avatar-img" [alt]="pub()!.usuario.nombreUsuario" />
+          } @else {
+            <div class="post-avatar">{{ iniciales(pub()!.usuario.nombre, pub()!.usuario.apellido) }}</div>
+          }
+          <div class="post-autor-info">
+            <span class="post-username">{{ pub()!.usuario.nombreUsuario }}</span>
+            <span class="post-tiempo">{{ tiempoRelativo(pub()!.createdAt) }}</span>
+          </div>
+        </div>
+
+        <p class="modal-post-texto">{{ pub()!.texto }}</p>
+
+        @if (pub()!.imagen) {
+          <img [src]="pub()!.imagen" class="modal-post-imagen" alt="imagen" />
+        }
+
+        <div class="modal-post-footer">
+          <button class="btn-accion" [class.liked]="likeDado()" (click)="toggleLike()">
+            <span class="mat-icon sm">{{ likeDado() ? 'favorite' : 'favorite_border' }}</span>
+            <span>{{ cantLikes() }}</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Derecha: comentarios -->
+      <div class="modal-derecha">
+        <h4 class="modal-titulo-comentarios">Comentarios ({{ comentariosTotales() }})</h4>
+
+        <div class="modal-lista-comentarios">
+          @if (cargandoComentarios() && comentarios().length === 0) {
+            <p class="sin-comentarios">Cargando...</p>
+          } @else if (!cargandoComentarios() && comentarios().length === 0) {
+            <p class="sin-comentarios">Sin comentarios aún. ¡Sé el primero!</p>
+          }
+
+          @for (c of comentarios(); track c._id) {
+            <div class="comentario-item">
+              @if (c.usuario.imagenPerfil) {
+                <img [src]="c.usuario.imagenPerfil" class="comentario-avatar-img" [alt]="c.usuario.nombreUsuario" />
+              } @else {
+                <div class="comentario-avatar">{{ c.usuario.nombreUsuario.substring(0, 2).toUpperCase() }}</div>
+              }
+              <div class="comentario-body">
+                <div class="comentario-top">
+                  <span class="comentario-username">{{ c.usuario.nombreUsuario }}</span>
+                  @if (c.modificado) {
+                    <span class="badge-editado">editado</span>
+                  }
+                  @if (esMiComentario(c) && editandoId() !== c._id) {
+                    <button class="btn-edit-comentario" (click)="iniciarEdit(c)" title="Editar">
+                      <span class="mat-icon sm">edit</span>
+                    </button>
+                  }
+                </div>
+
+                @if (editandoId() === c._id) {
+                  <textarea
+                    class="edit-input"
+                    rows="2"
+                    [value]="textoEditado()"
+                    (input)="onInputEdit($event)"
+                  ></textarea>
+                  <div class="edit-acciones">
+                    <button class="btn-cancelar-edit" (click)="cancelarEdit()">Cancelar</button>
+                    <button
+                      class="btn-guardar-edit"
+                      (click)="guardarEdit(c)"
+                      [disabled]="!textoEditado().trim() || guardandoEdit()"
+                    >{{ guardandoEdit() ? 'Guardando...' : 'Guardar' }}</button>
+                  </div>
+                } @else {
+                  <p class="comentario-texto">{{ c.texto }}</p>
+                }
+
+                <span class="comentario-tiempo">{{ tiempoRelativo(c.createdAt) }}</span>
+              </div>
+            </div>
+          }
+        </div>
+
+        @if (cargandoComentarios() && comentarios().length > 0) {
+          <div class="comentarios-loader">
+            <span class="mat-icon sm">hourglass_empty</span>
+            Cargando...
+          </div>
+        } @else if (!cargandoComentarios() && hayMas()) {
+          <button class="btn-cargar-mas-comentarios" (click)="cargarMas()">
+            <span class="mat-icon sm">expand_more</span>
+            Cargar más comentarios
+          </button>
+        }
+
+        @if (usuario()) {
+          <div class="modal-nuevo-comentario">
+            <textarea
+              class="comentario-input"
+              placeholder="Escribí un comentario..."
+              rows="2"
+              [value]="textoComentario()"
+              (input)="onInputComentario($event)"
+              (keydown.enter)="!$any($event).shiftKey && $event.preventDefault(); !$any($event).shiftKey && enviarComentario()"
+            ></textarea>
+            <button
+              class="btn-enviar-comentario"
+              (click)="enviarComentario()"
+              [disabled]="!textoComentario().trim() || enviandoComentario()"
+            >
+              <span class="mat-icon">send</span>
+            </button>
+          </div>
+        }
+      </div>
+
+    }
+  </div>
+</div>

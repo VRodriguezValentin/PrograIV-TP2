@@ -12,10 +12,7 @@ export class AuthService {
 
   login(identificador: string, contrasena: string): Observable<Usuario> {
     return this.http
-      .post<Usuario>(`${this.API_URL}/autenticacion/login`, {
-        identificador,
-        contrasena,
-      })
+      .post<Usuario>(`${this.API_URL}/autenticacion/login`, { identificador, contrasena })
       .pipe(tap((usuario) => localStorage.setItem('usuario', JSON.stringify(usuario))));
   }
 
@@ -23,8 +20,19 @@ export class AuthService {
     return this.http.post(`${this.API_URL}/autenticacion/registro`, formData);
   }
 
+  autorizar(): Observable<Usuario> {
+    return this.http
+      .post<Usuario>(`${this.API_URL}/autenticacion/autorizar`, {})
+      .pipe(tap((usuario) => localStorage.setItem('usuario', JSON.stringify(usuario))));
+  }
+
+  refrescar(): Observable<{ ok: boolean }> {
+    return this.http.post<{ ok: boolean }>(`${this.API_URL}/autenticacion/refrescar`, {});
+  }
+
   logout(): void {
     localStorage.removeItem('usuario');
+    this.http.post(`${this.API_URL}/autenticacion/logout`, {}).subscribe();
   }
 
   getUsuario(): Usuario | null {

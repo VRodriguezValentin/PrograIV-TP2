@@ -1,5 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { RouterOutlet } from '@angular/router';
 import { Navbar } from '../navbar/navbar';
 import { PublicacionComponent } from '../publicacion/publicacion';
 import { AuthService } from '../../services/auth.service';
@@ -9,7 +9,7 @@ import { PublicacionData } from '../../models/publicacion-data';
 
 @Component({
   selector: 'app-mi-perfil',
-  imports: [CommonModule, Navbar, PublicacionComponent],
+  imports: [RouterOutlet, Navbar, PublicacionComponent],
   templateUrl: './mi-perfil.html',
   styleUrl: './mi-perfil.css',
 })

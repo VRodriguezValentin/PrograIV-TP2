@@ -74,4 +74,20 @@ export class PublicacionesService {
       dto,
     );
   }
+
+  editarComentario(
+    pubId: string,
+    comentarioId: string,
+    texto: string,
+    usuarioId: string,
+  ): Observable<ComentarioData> {
+    return this.http.put<ComentarioData>(
+      `${this.API}/publicaciones/${pubId}/comentarios/${comentarioId}`,
+      { texto, usuarioId },
+    );
+  }
+
+  obtenerPorId(id: string): Observable<PublicacionData> {
+    return this.http.get<PublicacionData>(`${this.API}/publicaciones/${id}`);
+  }
 }

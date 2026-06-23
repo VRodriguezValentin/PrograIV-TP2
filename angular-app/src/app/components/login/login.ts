@@ -8,6 +8,7 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { SessionTimerService } from '../../services/session-timer.service';
 
 @Component({
   selector: 'app-login',
@@ -26,6 +27,7 @@ export class Login {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private sessionTimer: SessionTimerService,
     private router: Router,
   ) {
     this.form = this.fb.group({
@@ -60,6 +62,7 @@ export class Login {
     this.authService.login(identificador, contrasena).subscribe({
       next: () => {
         this.loading.set(false);
+        this.sessionTimer.startTimer();
         this.router.navigate(['/publicaciones']);
       },
       error: (err) => {

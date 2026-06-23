@@ -80,8 +80,6 @@
         <app-publicacion
           [pub]="pub"
           [idUsuarioActual]="usuario()?._id ?? ''"
-          [nombreUsuarioActual]="usuario()?.nombreUsuario ?? ''"
-          [imagenPerfilActual]="usuario()?.imagenPerfil ?? ''"
           (deleteReq)="onDelete($event)"
         />
       }
@@ -110,3 +108,5 @@
 
   </div>
 </div>
+
+<router-outlet />

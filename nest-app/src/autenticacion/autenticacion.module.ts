@@ -1,11 +1,19 @@
 import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
 import { AutenticacionController } from './autenticacion.controller';
 import { AutenticacionService } from './autenticacion.service';
 import { UsuariosModule } from '../usuarios/usuarios.module';
 import { CloudinaryModule } from '../cloudinary/cloudinary.module';
 
 @Module({
-  imports: [UsuariosModule, CloudinaryModule],
+  imports: [
+    UsuariosModule,
+    CloudinaryModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET ?? 'nexo-dev-secret',
+      signOptions: { expiresIn: '15m' },
+    }),
+  ],
   controllers: [AutenticacionController],
   providers: [AutenticacionService],
 })

@@ -1,1 +1,15 @@
 <router-outlet></router-outlet>
+
+@if (sessionTimer.mostrarModal()) {
+  <div class="session-overlay">
+    <div class="session-modal">
+      <span class="mat-icon session-icon">timer</span>
+      <h3>¿Seguís ahí?</h3>
+      <p>Quedan <strong>5 minutos</strong> de sesión.<br/>¿Querés extenderla?</p>
+      <div class="session-btns">
+        <button class="btn-session-cancel" (click)="cerrarModal()">No, gracias</button>
+        <button class="btn-session-extend" (click)="extenderSesion()">Sí, extender</button>
+      </div>
+    </div>
+  </div>
+}

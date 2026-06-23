@@ -4,6 +4,7 @@ import { Model, Types } from 'mongoose';
 import { Publicacion, PublicacionDocument } from './entities/publicacion.entity';
 import { CrearPublicacionDto } from './dto/crear-publicacion.dto';
 import { AgregarComentarioDto } from './dto/agregar-comentario.dto';
+import { EditarComentarioDto } from './dto/editar-comentario.dto';
 
 @Injectable()
 export class PublicacionesService {
@@ -64,6 +65,21 @@ export class PublicacionesService {
     return this.publicacionModel.aggregate(pipeline);
   }
 
+  async obtenerPorId(id: string) {
+    const pub = (await this.publicacionModel
+      .findOne({ _id: new Types.ObjectId(id), activo: true })
+      .populate('usuario', 'nombre apellido nombreUsuario imagenPerfil')
+      .lean()) as any;
+    if (!pub) throw new NotFoundException('Publicación no encontrada');
+
+    return {
+      ...pub,
+      meGustas: (pub.meGustas ?? []).map((m: any) => m.toString()),
+      comentariosTotales: pub.comentarios?.length ?? 0,
+      comentarios: [],
+    };
+  }
+
   async obtenerComentarios(id: string, offset = 0, limit = 5) {
     const pub = (await this.publicacionModel
       .findById(id)
@@ -71,8 +87,30 @@ export class PublicacionesService {
       .lean()) as any;
     if (!pub || !pub.activo) throw new NotFoundException('Publicación no encontrada');
 
-    const all: any[] = pub.comentarios ?? [];
+    const all: any[] = [...(pub.comentarios ?? [])].sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
     return { comentarios: all.slice(offset, offset + limit), total: all.length };
+  }
+
+  async editarComentario(pubId: string, comentarioId: string, dto: EditarComentarioDto) {
+    const pub = await this.publicacionModel.findById(pubId);
+    if (!pub || !pub.activo) throw new NotFoundException('Publicación no encontrada');
+
+    const comentario = pub.comentarios.find(
+      (c: any) => c._id.toString() === comentarioId,
+    ) as any;
+    if (!comentario) throw new NotFoundException('Comentario no encontrado');
+
+    if (comentario.usuario._id.toString() !== dto.usuarioId) {
+      throw new ForbiddenException('No podés editar este comentario');
+    }
+
+    comentario.texto = dto.texto;
+    comentario.modificado = true;
+    pub.markModified('comentarios');
+    await pub.save();
+    return comentario;
   }
 
   async agregarComentario(id: string, dto: AgregarComentarioDto) {

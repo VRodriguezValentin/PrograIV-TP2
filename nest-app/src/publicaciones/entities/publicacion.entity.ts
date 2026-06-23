@@ -11,6 +11,7 @@ const ComentarioSchema = new MongooseSchema(
       imagenPerfil: { type: String, default: '' },
     },
     texto: { type: String, required: true },
+    modificado: { type: Boolean, default: false },
   },
   { _id: true, timestamps: true },
 );
