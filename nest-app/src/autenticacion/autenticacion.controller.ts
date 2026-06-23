@@ -25,7 +25,7 @@ const multerConfig = {
 
 const COOKIE_OPTS = {
   httpOnly: true,
-  maxAge: 15 * 60 * 1000,
+  maxAge: 1 * 60 * 1000,
   sameSite: 'none' as const,
   secure: true,
 };
