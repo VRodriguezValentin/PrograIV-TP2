@@ -4,19 +4,19 @@ export class RegistroDto {
   @IsNotEmpty({ message: 'El nombre es requerido' })
   @IsString()
   @MinLength(2, { message: 'El nombre debe tener al menos 2 caracteres' })
-  @MaxLength(50, { message: 'El nombre no puede superar los 50 caracteres' })
+  @MaxLength(20, { message: 'El nombre no puede superar los 20 caracteres' })
   @Matches(/^[A-Za-zÀ-ÿ\s'-]+$/, { message: 'El nombre solo puede contener letras' })
   nombre!: string;
 
   @IsNotEmpty({ message: 'El apellido es requerido' })
   @IsString()
   @MinLength(2, { message: 'El apellido debe tener al menos 2 caracteres' })
-  @MaxLength(50, { message: 'El apellido no puede superar los 50 caracteres' })
+  @MaxLength(20, { message: 'El apellido no puede superar los 20 caracteres' })
   @Matches(/^[A-Za-zÀ-ÿ\s'-]+$/, { message: 'El apellido solo puede contener letras' })
   apellido!: string;
 
   @IsEmail({}, { message: 'El correo no es válido' })
-  @MaxLength(100, { message: 'El correo no puede superar los 100 caracteres' })
+  @MaxLength(50, { message: 'El correo no puede superar los 50 caracteres' })
   correo!: string;
 
   @IsNotEmpty({ message: 'El nombre de usuario es requerido' })
@@ -29,7 +29,7 @@ export class RegistroDto {
   @IsNotEmpty({ message: 'La contraseña es requerida' })
   @IsString()
   @MinLength(8, { message: 'La contraseña debe tener al menos 8 caracteres' })
-  @MaxLength(64, { message: 'La contraseña no puede superar los 64 caracteres' })
+  @MaxLength(50, { message: 'La contraseña no puede superar los 50 caracteres' })
   @Matches(/^(?=.*[A-Z])(?=.*\d)/, {
     message: 'La contraseña debe tener al menos una mayúscula y un número',
   })

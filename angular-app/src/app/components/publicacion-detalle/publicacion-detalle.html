@@ -114,14 +114,18 @@
 
         @if (usuario()) {
           <div class="modal-nuevo-comentario">
-            <textarea
-              class="comentario-input"
-              placeholder="Escribí un comentario..."
-              rows="2"
-              [value]="textoComentario()"
-              (input)="onInputComentario($event)"
-              (keydown.enter)="!$any($event).shiftKey && $event.preventDefault(); !$any($event).shiftKey && enviarComentario()"
-            ></textarea>
+            <div class="comentario-input-wrapper">
+              <textarea
+                class="comentario-input"
+                placeholder="Escribí un comentario..."
+                rows="2"
+                maxlength="500"
+                [value]="textoComentario()"
+                (input)="onInputComentario($event)"
+                (keydown.enter)="!$any($event).shiftKey && $event.preventDefault(); !$any($event).shiftKey && enviarComentario()"
+              ></textarea>
+              <span class="comentario-counter" [class.comentario-counter--lleno]="textoComentario().length >= 500">{{ textoComentario().length }}/500</span>
+            </div>
             <button
               class="btn-enviar-comentario"
               (click)="enviarComentario()"
@@ -131,6 +135,7 @@
             </button>
           </div>
         }
+
       </div>
 
     }

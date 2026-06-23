@@ -18,6 +18,20 @@ function contrasenasIguales(control: AbstractControl): ValidationErrors | null {
   return null;
 }
 
+function stripNewlines(s: string): string {
+  return s.replace(/^\n+/, '').replace(/\n+$/, '');
+}
+
+function validarDescripcion(control: AbstractControl): ValidationErrors | null {
+  const raw: string = control.value || '';
+  if (!raw) return null;
+  const value = stripNewlines(raw);
+  if (!value.trim()) return { soloSaltos: true };
+  const newlines = (value.match(/\n/g) || []).length;
+  const weighted = value.length + newlines * 49;
+  return weighted > 200 ? { maxWeighted: true } : null;
+}
+
 function validarFechaNacimiento(control: AbstractControl): ValidationErrors | null {
   if (!control.value) return null;
 
@@ -68,9 +82,9 @@ export class Registro {
   ) {
     this.form = this.fb.group(
       {
-        nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern(/^[A-Za-zÀ-ÿ\s'-]+$/)]],
-        apellido: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern(/^[A-Za-zÀ-ÿ\s'-]+$/)]],
-        correo: ['', [Validators.required, Validators.email, Validators.maxLength(100)]],
+        nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(20), Validators.pattern(/^[A-Za-zÀ-ÿ\s'-]+$/)]],
+        apellido: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(20), Validators.pattern(/^[A-Za-zÀ-ÿ\s'-]+$/)]],
+        correo: ['', [Validators.required, Validators.email, Validators.maxLength(50)]],
         nombreUsuario: [
           '',
           [
@@ -85,13 +99,13 @@ export class Registro {
           [
             Validators.required,
             Validators.minLength(8),
-            Validators.maxLength(64),
+            Validators.maxLength(50),
             Validators.pattern(/^(?=.*[A-Z])(?=.*\d)/),
           ],
         ],
         repetirContrasena: ['', Validators.required],
         fechaNacimiento: ['', [Validators.required, validarFechaNacimiento]],
-        descripcion: ['', Validators.maxLength(200)],
+        descripcion: ['', validarDescripcion],
         perfil: ['usuario'],
       },
       { validators: contrasenasIguales },
@@ -100,6 +114,12 @@ export class Registro {
 
   get f() { return this.form.controls; }
   get mismatch() { return this.form.errors?.['contrasenasNoCoinciden'] && this.f['repetirContrasena'].touched; }
+
+  get descripcionPeso(): number {
+    const val = stripNewlines(this.form.get('descripcion')?.value || '');
+    const newlines = (val.match(/\n/g) || []).length;
+    return val.length + newlines * 49;
+  }
 
   togglePw() { this.showPw.update((v) => !v); }
   togglePwRepeat() { this.showPwRepeat.update((v) => !v); }
@@ -136,7 +156,7 @@ export class Registro {
     formData.append('nombreUsuario', v.nombreUsuario);
     formData.append('contrasena', v.contrasena);
     formData.append('fechaNacimiento', v.fechaNacimiento);
-    formData.append('descripcion', v.descripcion || '');
+    formData.append('descripcion', stripNewlines(v.descripcion || ''));
     formData.append('perfil', v.perfil);
     if (this.archivoSeleccionado) {
       formData.append('imagenPerfil', this.archivoSeleccionado);
