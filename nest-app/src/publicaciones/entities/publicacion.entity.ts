@@ -22,6 +22,9 @@ export class Publicacion {
   usuario!: Types.ObjectId;
 
   @Prop({ required: true, trim: true })
+  titulo!: string;
+
+  @Prop({ required: true, trim: true })
   texto!: string;
 
   @Prop({ default: '' })

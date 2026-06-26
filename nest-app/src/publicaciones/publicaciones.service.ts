@@ -16,6 +16,7 @@ export class PublicacionesService {
   async crear(dto: CrearPublicacionDto, imagenUrl = '') {
     const pub = await this.publicacionModel.create({
       usuario: new Types.ObjectId(dto.usuarioId),
+      titulo: dto.titulo,
       texto: dto.texto,
       imagen: imagenUrl,
     });

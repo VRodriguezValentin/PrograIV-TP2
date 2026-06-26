@@ -30,6 +30,7 @@
           </div>
         </div>
 
+        <h3 class="modal-post-titulo">{{ pub()!.titulo }}</h3>
         <p class="modal-post-texto">{{ pub()!.texto }}</p>
 
         @if (pub()!.imagen) {
@@ -79,9 +80,11 @@
                   <textarea
                     class="edit-input"
                     rows="2"
+                    maxlength="500"
                     [value]="textoEditado()"
                     (input)="onInputEdit($event)"
                   ></textarea>
+                  <span class="comentario-counter" [class.comentario-counter--lleno]="textoEditado().length >= 500">{{ textoEditado().length }}/500</span>
                   <div class="edit-acciones">
                     <button class="btn-cancelar-edit" (click)="cancelarEdit()">Cancelar</button>
                     <button

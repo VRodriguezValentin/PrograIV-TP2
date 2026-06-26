@@ -29,6 +29,7 @@
   </div>
 
   <div class="post-body" (click)="verDetalle()">
+    <h3 class="post-titulo">{{ pub.titulo }}</h3>
     <p class="post-texto">{{ pub.texto }}</p>
     @if (pub.imagen) {
       <img [src]="pub.imagen" class="post-imagen" alt="imagen de publicacion" />

@@ -32,13 +32,28 @@
 
     @if (mostrarCrear()) {
       <div class="crear-card">
-        <textarea
-          class="crear-textarea"
-          placeholder=""
-          rows="3"
-          [value]="textoNueva()"
-          (input)="onTextoNuevaChange($event)"
-        ></textarea>
+        <div class="crear-field">
+          <input
+            class="crear-titulo-input"
+            type="text"
+            placeholder="Título *"
+            maxlength="100"
+            [value]="tituloNueva()"
+            (input)="onTituloNuevaChange($event)"
+          />
+          <span class="crear-counter" [class.crear-counter--lleno]="tituloNueva().length >= 100">{{ tituloNueva().length }}/100</span>
+        </div>
+        <div class="crear-field">
+          <textarea
+            class="crear-textarea"
+            placeholder="¿Qué querés compartir? *"
+            rows="3"
+            maxlength="2000"
+            [value]="textoNueva()"
+            (input)="onTextoNuevaChange($event)"
+          ></textarea>
+          <span class="crear-counter" [class.crear-counter--lleno]="textoNueva().length >= 2000">{{ textoNueva().length }}/2000</span>
+        </div>
         @if (imagenPreview()) {
           <div class="imagen-preview-wrapper">
             <img [src]="imagenPreview()!" class="imagen-preview" alt="Preview" />
@@ -59,7 +74,7 @@
           <button
             class="btn-publicar"
             (click)="crearPublicacion()"
-            [disabled]="!textoNueva().trim() || creando()"
+            [disabled]="!tituloNueva().trim() || !textoNueva().trim() || creando()"
           >
             <span class="mat-icon sm">send</span>
             {{ creando() ? 'Publicando...' : 'Publicar' }}

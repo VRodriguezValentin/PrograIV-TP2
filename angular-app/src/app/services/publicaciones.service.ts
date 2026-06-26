@@ -27,8 +27,9 @@ export class PublicacionesService {
     return this.http.get<PublicacionData[]>(`${this.API}/publicaciones`, { params: p });
   }
 
-  crear(texto: string, usuarioId: string, imagen?: File): Observable<PublicacionData> {
+  crear(titulo: string, texto: string, usuarioId: string, imagen?: File): Observable<PublicacionData> {
     const form = new FormData();
+    form.append('titulo', titulo);
     form.append('texto', texto);
     form.append('usuarioId', usuarioId);
     if (imagen) form.append('imagen', imagen);

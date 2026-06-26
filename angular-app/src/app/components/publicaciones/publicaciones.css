@@ -162,6 +162,46 @@
   gap: 0.75rem;
 }
 
+.crear-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.crear-counter {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-align: right;
+  transition: color 0.15s;
+}
+
+.crear-counter--lleno {
+  color: var(--magenta);
+}
+
+.crear-titulo-input {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0.65rem 1rem;
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.crear-titulo-input:focus {
+  outline: none;
+  border-color: var(--cyan);
+}
+
+.crear-titulo-input::placeholder {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
 .crear-textarea {
   width: 100%;
   background: var(--bg-input);

@@ -9,6 +9,7 @@ export interface PublicacionData {
     nombre: string;
     apellido: string;
     };
+    titulo: string;
     texto: string;
     imagen?: string;
     meGustas: string[];

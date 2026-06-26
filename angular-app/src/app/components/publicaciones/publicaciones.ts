@@ -22,6 +22,7 @@ export class Publicaciones implements OnInit {
   cargando = signal(false);
   hayMas = signal(true);
   mostrarCrear = signal(false);
+  tituloNueva = signal('');
   textoNueva = signal('');
   imagenNueva = signal<File | null>(null);
   imagenPreview = signal<string | null>(null);
@@ -54,10 +55,15 @@ export class Publicaciones implements OnInit {
     const nuevo = !this.mostrarCrear();
     this.mostrarCrear.set(nuevo);
     if (!nuevo) {
+      this.tituloNueva.set('');
       this.textoNueva.set('');
       this.imagenNueva.set(null);
       this.imagenPreview.set(null);
     }
+  }
+
+  onTituloNuevaChange(e: Event) {
+    this.tituloNueva.set((e.target as HTMLInputElement).value);
   }
 
   onTextoNuevaChange(e: Event) {
@@ -82,13 +88,15 @@ export class Publicaciones implements OnInit {
   }
 
   crearPublicacion() {
+    const titulo = this.tituloNueva().trim();
     const texto = this.textoNueva().trim();
     const u = this.usuario();
-    if (!texto || !u || this.creando()) return;
+    if (!titulo || !texto || !u || this.creando()) return;
     this.creando.set(true);
-    this.publicacionesService.crear(texto, u._id, this.imagenNueva() ?? undefined).subscribe({
+    this.publicacionesService.crear(titulo, texto, u._id, this.imagenNueva() ?? undefined).subscribe({
       next: (pub) => {
         this.publicaciones.update((ps) => [pub, ...ps]);
+        this.tituloNueva.set('');
         this.textoNueva.set('');
         this.imagenNueva.set(null);
         this.imagenPreview.set(null);

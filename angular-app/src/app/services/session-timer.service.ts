@@ -17,7 +17,7 @@ export class SessionTimerService {
     this.clearTimer();
     this.warningTimer = setTimeout(() => {
       this.mostrarModal.set(true);
-    }, 30 * 1000);
+    }, 10 * 60 * 1000);
   }
 
   extender() {

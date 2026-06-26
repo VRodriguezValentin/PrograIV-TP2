@@ -10,6 +10,7 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { SessionTimerService } from '../../services/session-timer.service';
 
 function contrasenasIguales(control: AbstractControl): ValidationErrors | null {
   const contra = control.get('contrasena');
@@ -78,6 +79,7 @@ export class Registro {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private sessionTimer: SessionTimerService,
     private router: Router,
   ) {
     this.form = this.fb.group(
@@ -135,9 +137,7 @@ export class Registro {
   }
 
   cerrarModal() {
-    const tipo = this.modal().tipo;
     this.modal.set({ ...this.modal(), visible: false });
-    if (tipo === 'exito') this.router.navigate(['/login']);
   }
 
   onSubmit() {
@@ -165,11 +165,8 @@ export class Registro {
     this.authService.registro(formData).subscribe({
       next: () => {
         this.loading.set(false);
-        this.modal.set({
-          visible: true,
-          tipo: 'exito',
-          mensaje: '¡Tu cuenta fue creada exitosamente! Ahora podés iniciar sesión.',
-        });
+        this.sessionTimer.startTimer();
+        this.router.navigate(['/publicaciones']);
       },
       error: (err) => {
         this.loading.set(false);

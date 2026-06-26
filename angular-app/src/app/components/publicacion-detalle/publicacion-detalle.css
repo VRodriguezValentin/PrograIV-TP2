@@ -141,6 +141,15 @@
   color: var(--text-muted);
 }
 
+.modal-post-titulo {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
 .modal-post-texto {
   font-size: 0.95rem;
   color: var(--text-primary);

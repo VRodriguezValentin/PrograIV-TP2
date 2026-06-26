@@ -16,8 +16,10 @@ export class AuthService {
       .pipe(tap((usuario) => localStorage.setItem('usuario', JSON.stringify(usuario))));
   }
 
-  registro(formData: FormData): Observable<unknown> {
-    return this.http.post(`${this.API_URL}/autenticacion/registro`, formData);
+  registro(formData: FormData): Observable<Usuario> {
+    return this.http
+      .post<Usuario>(`${this.API_URL}/autenticacion/registro`, formData)
+      .pipe(tap((usuario) => localStorage.setItem('usuario', JSON.stringify(usuario))));
   }
 
   autorizar(): Observable<Usuario> {

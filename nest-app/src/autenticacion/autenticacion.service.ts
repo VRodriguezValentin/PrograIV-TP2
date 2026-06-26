@@ -17,7 +17,7 @@ export class AutenticacionService {
     void iat; void exp;
     return this.jwtService.sign(clean, {
       secret: process.env.JWT_SECRET ?? 'nexo-dev-secret',
-      expiresIn: '1m',
+      expiresIn: '15m',
     });
   }
 
