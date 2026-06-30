@@ -44,6 +44,7 @@
             <app-publicacion
               [pub]="pub"
               [idUsuarioActual]="usuario()!._id"
+              [perfilUsuarioActual]="usuario()!.perfil"
               [detallePath]="'/mi-perfil'"
               (deleteReq)="onDeletePost($event)"
             />

@@ -88,6 +88,33 @@
   margin-left: auto;
   position: relative;
   margin-right: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.btn-dashboard {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.875rem;
+  background: rgba(139, 47, 255, 0.12);
+  border: 1px solid rgba(139, 47, 255, 0.35);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-dashboard:hover {
+  background: rgba(139, 47, 255, 0.22);
+  color: var(--text-primary);
+  border-color: var(--purple);
 }
 
 .avatar-wrapper {

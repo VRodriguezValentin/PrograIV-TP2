@@ -1,0 +1,24 @@
+{
+  "name": "NEXO",
+  "short_name": "NEXO",
+  "description": "Red social NEXO",
+  "theme_color": "#0b0b14",
+  "background_color": "#0b0b14",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/publicaciones",
+  "icons": [
+    {
+      "src": "nexo-logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "nexo-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

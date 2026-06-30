@@ -5,10 +5,13 @@ import { PublicacionesService } from '../../services/publicaciones.service';
 import { PublicacionData } from '../../models/publicacion-data';
 import { ComentarioData } from '../../models/comentario-data';
 import { Usuario } from '../../models/usuario';
+import { RelativeTimePipe } from '../../pipes/relative-time.pipe';
+import { LazyGifDirective } from '../../directives/lazy-gif.directive';
+import { CharCounterDirective } from '../../directives/char-counter.directive';
 
 @Component({
   selector: 'app-publicacion-detalle',
-  imports: [],
+  imports: [RelativeTimePipe, LazyGifDirective, CharCounterDirective],
   templateUrl: './publicacion-detalle.html',
   styleUrl: './publicacion-detalle.css',
 })
@@ -55,14 +58,6 @@ export class PublicacionDetalle implements OnInit, OnDestroy {
 
   iniciales(nombre: string, apellido: string): string {
     return `${nombre[0] ?? ''}${apellido[0] ?? ''}`.toUpperCase();
-  }
-
-  tiempoRelativo(fecha: Date): string {
-    const diff = Math.floor((Date.now() - new Date(fecha).getTime()) / 1000);
-    if (diff < 60) return 'justo ahora';
-    if (diff < 3600) return `hace ${Math.floor(diff / 60)} min`;
-    if (diff < 86400) return `hace ${Math.floor(diff / 3600)} h`;
-    return `hace ${Math.floor(diff / 86400)} d`;
   }
 
   esMiComentario(c: ComentarioData): boolean {

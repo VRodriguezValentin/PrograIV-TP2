@@ -1,0 +1,301 @@
+<app-navbar />
+
+<div class="dashboard-page">
+
+  <div class="dashboard-tabs">
+    <button class="tab-btn" [class.activo]="activeTab() === 'usuarios'" (click)="cambiarTab('usuarios')">
+      <span class="mat-icon sm">group</span>
+      Usuarios
+    </button>
+    <button class="tab-btn" [class.activo]="activeTab() === 'estadisticas'" (click)="cambiarTab('estadisticas')">
+      <span class="mat-icon sm">bar_chart</span>
+      Estadísticas
+    </button>
+  </div>
+
+  @if (activeTab() === 'usuarios') {
+    <div class="tab-content">
+
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="mat-icon sm">group</span>
+          Gestión de Usuarios
+        </h2>
+        <div class="header-actions">
+          <div class="input-busqueda-wrapper">
+            <span class="mat-icon sm">search</span>
+            <input
+              class="input-busqueda"
+              type="text"
+              placeholder="Buscar..."
+              [value]="busqueda()"
+              (input)="busqueda.set($any($event.target).value)"
+            />
+          </div>
+          <button class="btn-nuevo" (click)="toggleFormCrear()">
+            <span class="mat-icon sm">{{ mostrarFormCrear() ? 'close' : 'person_add' }}</span>
+            {{ mostrarFormCrear() ? 'Cancelar' : 'Nuevo usuario' }}
+          </button>
+        </div>
+      </div>
+
+      @if (alertaVisible()) {
+        <div class="alerta" [class.alerta-exito]="alertaTipo() === 'exito'" [class.alerta-error]="alertaTipo() === 'error'" [class.alerta-warn]="alertaTipo() === 'warn'">
+          <span class="mat-icon sm">{{ alertaTipo() === 'exito' ? 'check_circle' : alertaTipo() === 'warn' ? 'warning' : 'error' }}</span>
+          {{ alertaMensaje() }}
+          <button class="btn-cerrar-alerta" (click)="alertaVisible.set(false)">
+            <span class="mat-icon sm">close</span>
+          </button>
+        </div>
+      }
+
+      @if (mostrarFormCrear()) {
+        <div class="crear-card">
+          <h3 class="crear-titulo">Nuevo usuario</h3>
+          <form [formGroup]="formCrear" (ngSubmit)="crearUsuario()">
+            <div class="form-grid">
+
+              <div class="form-field">
+                <label>Nombre *</label>
+                <input formControlName="nombre" type="text" placeholder="Nombre" maxlength="20" />
+                @if (formCrear.get('nombre')?.invalid && formCrear.get('nombre')?.touched) {
+                  <span class="form-error">2–20 caracteres, solo letras.</span>
+                }
+              </div>
+
+              <div class="form-field">
+                <label>Apellido *</label>
+                <input formControlName="apellido" type="text" placeholder="Apellido" maxlength="20" />
+                @if (formCrear.get('apellido')?.invalid && formCrear.get('apellido')?.touched) {
+                  <span class="form-error">2–20 caracteres, solo letras.</span>
+                }
+              </div>
+
+              <div class="form-field">
+                <label>Correo *</label>
+                <input formControlName="correo" type="email" placeholder="correo@ejemplo.com" maxlength="50" />
+                @if (formCrear.get('correo')?.invalid && formCrear.get('correo')?.touched) {
+                  <span class="form-error">Correo inválido.</span>
+                }
+              </div>
+
+              <div class="form-field">
+                <label>Nombre de usuario *</label>
+                <input formControlName="nombreUsuario" type="text" placeholder="nombreusuario" maxlength="20" />
+                @if (formCrear.get('nombreUsuario')?.invalid && formCrear.get('nombreUsuario')?.touched) {
+                  <span class="form-error">3–20 caracteres, solo letras, números y _.</span>
+                }
+              </div>
+
+              <div class="form-field">
+                <label>Contraseña *</label>
+                <div class="pass-wrapper">
+                  <input formControlName="contrasena" [type]="showPass() ? 'text' : 'password'" placeholder="Mín. 8 car., 1 mayúscula y 1 número" maxlength="50" />
+                  <button type="button" class="btn-pass-toggle" (click)="showPass.update(v => !v)">
+                    <span class="mat-icon sm">{{ showPass() ? 'visibility_off' : 'visibility' }}</span>
+                  </button>
+                </div>
+                @if (formCrear.get('contrasena')?.invalid && formCrear.get('contrasena')?.touched) {
+                  <span class="form-error">Mínimo 8 caracteres, 1 mayúscula y 1 número.</span>
+                }
+              </div>
+
+              <div class="form-field">
+                <label>Repetir contraseña *</label>
+                <div class="pass-wrapper">
+                  <input formControlName="repetirContrasena" [type]="showPassRepeat() ? 'text' : 'password'" placeholder="Repetí la contraseña" maxlength="50" />
+                  <button type="button" class="btn-pass-toggle" (click)="showPassRepeat.update(v => !v)">
+                    <span class="mat-icon sm">{{ showPassRepeat() ? 'visibility_off' : 'visibility' }}</span>
+                  </button>
+                </div>
+                @if (mismatch) {
+                  <span class="form-error">Las contraseñas no coinciden.</span>
+                }
+              </div>
+
+              <div class="form-field">
+                <label>Fecha de nacimiento *</label>
+                <input formControlName="fechaNacimiento" type="date" />
+                @if (formCrear.get('fechaNacimiento')?.errors?.['fechaFutura'] && formCrear.get('fechaNacimiento')?.touched) {
+                  <span class="form-error">La fecha no puede ser futura.</span>
+                }
+                @if (formCrear.get('fechaNacimiento')?.errors?.['menorDeEdad'] && formCrear.get('fechaNacimiento')?.touched) {
+                  <span class="form-error">El usuario debe tener al menos 18 años.</span>
+                }
+                @if (formCrear.get('fechaNacimiento')?.errors?.['mayorA100Anios'] && formCrear.get('fechaNacimiento')?.touched) {
+                  <span class="form-error">Fecha inválida (más de 100 años).</span>
+                }
+                @if (formCrear.get('fechaNacimiento')?.errors?.['required'] && formCrear.get('fechaNacimiento')?.touched) {
+                  <span class="form-error">Requerido.</span>
+                }
+              </div>
+
+              <div class="form-field">
+                <label>Foto de perfil <span class="label-opcional">(opcional)</span></label>
+                <div class="upload-wrapper">
+                  @if (previewUrl()) {
+                    <img class="avatar-preview" [src]="previewUrl()" alt="Preview" />
+                  }
+                  <label class="btn-upload">
+                    <span class="mat-icon sm">upload</span>
+                    {{ previewUrl() ? 'Cambiar imagen' : 'Subir imagen' }}
+                    <input type="file" accept="image/jpeg,image/webp,image/gif" (change)="onArchivo($event)" hidden />
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-field form-field--full">
+                <label>Descripción <span class="label-opcional">(opcional)</span></label>
+                <textarea formControlName="descripcion" rows="2" placeholder="Descripción opcional..." maxlength="200" [charCounter]="200"></textarea>
+                @if (formCrear.get('descripcion')?.invalid && formCrear.get('descripcion')?.touched) {
+                  <span class="form-error">Máximo 200 caracteres.</span>
+                }
+              </div>
+
+              <div class="form-field form-field--full">
+                <label>Perfil *</label>
+                <div class="radio-group">
+                  <label class="radio-option">
+                    <input type="radio" formControlName="perfil" value="usuario" />
+                    <span class="radio-label">Usuario</span>
+                  </label>
+                  <label class="radio-option">
+                    <input type="radio" formControlName="perfil" value="administrador" />
+                    <span class="radio-label">Administrador</span>
+                  </label>
+                </div>
+              </div>
+
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn-crear" [disabled]="formCrear.invalid || creandoUsuario()">
+                <span class="mat-icon sm">{{ creandoUsuario() ? 'hourglass_empty' : 'person_add' }}</span>
+                {{ creandoUsuario() ? 'Creando...' : 'Crear usuario' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      }
+
+      @if (cargandoUsuarios()) {
+        <div class="loader">
+          <span class="mat-icon sm">hourglass_empty</span>
+          Cargando usuarios...
+        </div>
+      } @else if (usuarios().length === 0) {
+        <div class="empty-state">
+          <span class="mat-icon lg">group_off</span>
+          <p>Sin usuarios registrados.</p>
+        </div>
+      } @else {
+        <div class="tabla-wrapper">
+          <table class="tabla">
+            <thead>
+              <tr>
+                <th>Usuario</th>
+                <th>Correo</th>
+                <th>Fecha Nac.</th>
+                <th>Perfil</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (u of (usuarios() | filterTable:busqueda():['nombreUsuario','correo','perfil']); track u._id) {
+                <tr>
+                  <td class="td-username" [class.cell-dim]="!u.activo">{{ u.nombreUsuario }}</td>
+                  <td class="td-correo" [class.cell-dim]="!u.activo">{{ u.correo }}</td>
+                  <td [class.cell-dim]="!u.activo">{{ formatFecha(u.fechaNacimiento) }}</td>
+                  <td [class.cell-dim]="!u.activo">
+                    <span class="badge-perfil" [class.badge-admin]="u.perfil === 'administrador'">
+                      {{ u.perfil === 'administrador' ? 'Admin' : u.perfil }}
+                    </span>
+                  </td>
+                  <td>
+                    @if (u.activo) {
+                      <span class="estado-activo">
+                        <span class="mat-icon sm">check_circle</span>
+                      </span>
+                    } @else {
+                      <span class="estado-inactivo">
+                        <span class="mat-icon sm">cancel</span>
+                      </span>
+                    }
+                  </td>
+                  <td>
+                    @if (u.activo) {
+                      <button class="btn-accion btn-deshabilitar" (click)="deshabilitar(u)">
+                        <span class="mat-icon sm">block</span>
+                        Deshabilitar
+                      </button>
+                    } @else {
+                      <button class="btn-accion btn-habilitar" (click)="habilitar(u)">
+                        <span class="mat-icon sm">check_circle_outline</span>
+                        Habilitar
+                      </button>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+    </div>
+  }
+
+  @if (activeTab() === 'estadisticas') {
+    <div class="tab-content">
+
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="mat-icon sm">bar_chart</span>
+          Estadísticas
+        </h2>
+      </div>
+
+      <div class="charts-grid">
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Publicaciones por Usuario</h3>
+            <div class="periodo-btns">
+              <button [class.activo]="periodoBar() === 'dia'" (click)="cambiarPeriodo('bar', 'dia')">Día</button>
+              <button [class.activo]="periodoBar() === 'semana'" (click)="cambiarPeriodo('bar', 'semana')">Semana</button>
+              <button [class.activo]="periodoBar() === 'mes'" (click)="cambiarPeriodo('bar', 'mes')">Mes</button>
+            </div>
+          </div>
+          <div id="chart-bar"></div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Cantidad de Comentarios</h3>
+            <div class="periodo-btns">
+              <button [class.activo]="periodoLine() === 'dia'" (click)="cambiarPeriodo('line', 'dia')">Día</button>
+              <button [class.activo]="periodoLine() === 'semana'" (click)="cambiarPeriodo('line', 'semana')">Semana</button>
+              <button [class.activo]="periodoLine() === 'mes'" (click)="cambiarPeriodo('line', 'mes')">Mes</button>
+            </div>
+          </div>
+          <div id="chart-line"></div>
+        </div>
+
+        <div class="chart-card chart-card--full">
+          <div class="chart-header">
+            <h3>Publicaciones con mas Comentarios</h3>
+            <div class="periodo-btns">
+              <button [class.activo]="periodoPie() === 'dia'" (click)="cambiarPeriodo('pie', 'dia')">Día</button>
+              <button [class.activo]="periodoPie() === 'semana'" (click)="cambiarPeriodo('pie', 'semana')">Semana</button>
+              <button [class.activo]="periodoPie() === 'mes'" (click)="cambiarPeriodo('pie', 'mes')">Mes</button>
+            </div>
+          </div>
+          <div id="chart-pie"></div>
+        </div>
+
+      </div>
+
+    </div>
+  }
+
+</div>

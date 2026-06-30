@@ -20,13 +20,13 @@
       <div class="modal-izquierda">
         <div class="modal-post-header">
           @if (pub()!.usuario.imagenPerfil) {
-            <img [src]="pub()!.usuario.imagenPerfil" class="post-avatar-img" [alt]="pub()!.usuario.nombreUsuario" />
+            <img [lazyGif]="pub()!.usuario.imagenPerfil" class="post-avatar-img" [alt]="pub()!.usuario.nombreUsuario" />
           } @else {
             <div class="post-avatar">{{ iniciales(pub()!.usuario.nombre, pub()!.usuario.apellido) }}</div>
           }
           <div class="post-autor-info">
             <span class="post-username">{{ pub()!.usuario.nombreUsuario }}</span>
-            <span class="post-tiempo">{{ tiempoRelativo(pub()!.createdAt) }}</span>
+            <span class="post-tiempo">{{ pub()!.createdAt | relativeTime }}</span>
           </div>
         </div>
 
@@ -59,7 +59,7 @@
           @for (c of comentarios(); track c._id) {
             <div class="comentario-item">
               @if (c.usuario.imagenPerfil) {
-                <img [src]="c.usuario.imagenPerfil" class="comentario-avatar-img" [alt]="c.usuario.nombreUsuario" />
+                <img [lazyGif]="c.usuario.imagenPerfil" class="comentario-avatar-img" [alt]="c.usuario.nombreUsuario" />
               } @else {
                 <div class="comentario-avatar">{{ c.usuario.nombreUsuario.substring(0, 2).toUpperCase() }}</div>
               }
@@ -80,11 +80,10 @@
                   <textarea
                     class="edit-input"
                     rows="2"
-                    maxlength="500"
+                    [charCounter]="500"
                     [value]="textoEditado()"
                     (input)="onInputEdit($event)"
                   ></textarea>
-                  <span class="comentario-counter" [class.comentario-counter--lleno]="textoEditado().length >= 500">{{ textoEditado().length }}/500</span>
                   <div class="edit-acciones">
                     <button class="btn-cancelar-edit" (click)="cancelarEdit()">Cancelar</button>
                     <button
@@ -97,7 +96,7 @@
                   <p class="comentario-texto">{{ c.texto }}</p>
                 }
 
-                <span class="comentario-tiempo">{{ tiempoRelativo(c.createdAt) }}</span>
+                <span class="comentario-tiempo">{{ c.createdAt | relativeTime }}</span>
               </div>
             </div>
           }
@@ -122,12 +121,11 @@
                 class="comentario-input"
                 placeholder="Escribí un comentario..."
                 rows="2"
-                maxlength="500"
+                [charCounter]="500"
                 [value]="textoComentario()"
                 (input)="onInputComentario($event)"
                 (keydown.enter)="!$any($event).shiftKey && $event.preventDefault(); !$any($event).shiftKey && enviarComentario()"
               ></textarea>
-              <span class="comentario-counter" [class.comentario-counter--lleno]="textoComentario().length >= 500">{{ textoComentario().length }}/500</span>
             </div>
             <button
               class="btn-enviar-comentario"

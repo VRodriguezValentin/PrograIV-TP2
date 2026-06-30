@@ -5,6 +5,7 @@ import { Registro } from './components/registro/registro';
 import { Publicaciones } from './components/publicaciones/publicaciones';
 import { MiPerfil } from './components/mi-perfil/mi-perfil';
 import { PublicacionDetalle } from './components/publicacion-detalle/publicacion-detalle';
+import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
   { path: '', component: Cargando },
@@ -23,6 +24,11 @@ export const routes: Routes = [
     children: [
       { path: ':id', component: PublicacionDetalle },
     ],
+  },
+  {
+    path: 'dashboard',
+    loadComponent: () => import('./components/dashboard/dashboard').then((m) => m.Dashboard),
+    canActivate: [adminGuard],
   },
   { path: '**', redirectTo: '/' },
 ];

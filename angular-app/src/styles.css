@@ -105,3 +105,16 @@ input, textarea, select { font-family: inherit; }
   filter: saturate(1.08);
 }
 
+
+
+/* --- CharCounterDirective ------------------------------------------------- */
+.char-counter-badge {
+  display: block;
+  text-align: right;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+  transition: color 0.2s;
+}
+.char-counter-badge--warn { color: #ffcc00; }
+.char-counter-badge--over { color: var(--magenta); font-weight: 600; }

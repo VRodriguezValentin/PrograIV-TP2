@@ -2,18 +2,23 @@ import { Component, EventEmitter, Input, OnInit, Output, signal } from '@angular
 import { Router } from '@angular/router';
 import { PublicacionData } from '../../models/publicacion-data';
 import { PublicacionesService } from '../../services/publicaciones.service';
+import { RelativeTimePipe } from '../../pipes/relative-time.pipe';
+import { TruncatePipe } from '../../pipes/truncate.pipe';
+import { ClickOutsideDirective } from '../../directives/click-outside.directive';
+import { LazyGifDirective } from '../../directives/lazy-gif.directive';
 
 export type { PublicacionData } from '../../models/publicacion-data';
 
 @Component({
   selector: 'app-publicacion',
-  imports: [],
+  imports: [RelativeTimePipe, TruncatePipe, ClickOutsideDirective, LazyGifDirective],
   templateUrl: './publicacion.html',
   styleUrl: './publicacion.css',
 })
 export class PublicacionComponent implements OnInit {
   @Input() pub!: PublicacionData;
   @Input() idUsuarioActual = '';
+  @Input() perfilUsuarioActual = '';
   @Input() detallePath = '/publicaciones';
   @Output() deleteReq = new EventEmitter<string>();
 
@@ -37,16 +42,12 @@ export class PublicacionComponent implements OnInit {
     return this.pub.usuario._id === this.idUsuarioActual;
   }
 
-  iniciales(nombre: string, apellido: string): string {
-    return `${nombre[0] ?? ''}${apellido[0] ?? ''}`.toUpperCase();
+  puedeEliminar(): boolean {
+    return this.esMiPublicacion() || this.perfilUsuarioActual === 'administrador';
   }
 
-  tiempoRelativo(fecha: Date): string {
-    const diff = Math.floor((Date.now() - new Date(fecha).getTime()) / 1000);
-    if (diff < 60) return 'justo ahora';
-    if (diff < 3600) return `hace ${Math.floor(diff / 60)} min`;
-    if (diff < 86400) return `hace ${Math.floor(diff / 3600)} h`;
-    return `hace ${Math.floor(diff / 86400)} d`;
+  iniciales(nombre: string, apellido: string): string {
+    return `${nombre[0] ?? ''}${apellido[0] ?? ''}`.toUpperCase();
   }
 
   toggleLike() {

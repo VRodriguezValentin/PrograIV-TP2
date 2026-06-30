@@ -8,7 +8,13 @@
     
     <div class="nav-usuario">
       @if (usuario()) {
-        <div class="avatar-wrapper" (click)="toggleMenu()">
+        @if (usuario()?.perfil === 'administrador') {
+          <button class="btn-dashboard" routerLink="/dashboard">
+            <span class="mat-icon sm">dashboard</span>
+            Dashboard
+          </button>
+        }
+        <div class="avatar-wrapper" clickOutside (clickOutside)="menuAbierto.set(false)" (click)="toggleMenu()">
           @if (tieneImagen()) {
             <img [src]="usuario()?.imagenPerfil" alt="{{ usuario()?.nombreUsuario }}" class="avatar-img" />
           } @else {

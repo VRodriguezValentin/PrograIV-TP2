@@ -2,10 +2,11 @@ import { Component, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { Usuario } from '../../models/usuario';
+import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink],
+  imports: [RouterLink, ClickOutsideDirective],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })

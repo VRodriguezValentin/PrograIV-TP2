@@ -95,6 +95,7 @@
         <app-publicacion
           [pub]="pub"
           [idUsuarioActual]="usuario()?._id ?? ''"
+          [perfilUsuarioActual]="usuario()?.perfil ?? ''"
           (deleteReq)="onDelete($event)"
         />
       }

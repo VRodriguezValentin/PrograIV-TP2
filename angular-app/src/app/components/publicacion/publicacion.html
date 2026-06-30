@@ -2,18 +2,18 @@
   <div class="post-header">
     <div class="post-autor">
       @if (pub.usuario.imagenPerfil) {
-        <img [src]="pub.usuario.imagenPerfil" class="post-avatar-img" [alt]="pub.usuario.nombreUsuario" />
+        <img [lazyGif]="pub.usuario.imagenPerfil" class="post-avatar-img" [alt]="pub.usuario.nombreUsuario" />
       } @else {
         <div class="post-avatar">{{ iniciales(pub.usuario.nombre, pub.usuario.apellido) }}</div>
       }
       <div class="post-autor-info">
         <span class="post-username">{{ pub.usuario.nombreUsuario }}</span>
-        <span class="post-tiempo">{{ tiempoRelativo(pub.createdAt) }}</span>
+        <span class="post-tiempo">{{ pub.createdAt | relativeTime }}</span>
       </div>
     </div>
 
-    @if (esMiPublicacion()) {
-      <div class="post-opciones-wrapper">
+    @if (puedeEliminar()) {
+      <div class="post-opciones-wrapper" clickOutside (clickOutside)="dropdownAbierto.set(false)">
         <button class="btn-opciones" (click)="toggleDropdown()">
           <span class="mat-icon">more_vert</span>
         </button>
@@ -30,7 +30,7 @@
 
   <div class="post-body" (click)="verDetalle()">
     <h3 class="post-titulo">{{ pub.titulo }}</h3>
-    <p class="post-texto">{{ pub.texto }}</p>
+    <p class="post-texto">{{ pub.texto | truncate:200 }}</p>
     @if (pub.imagen) {
       <img [src]="pub.imagen" class="post-imagen" alt="imagen de publicacion" />
     }
