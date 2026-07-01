@@ -1,6 +1,7 @@
-import { Directive, ElementRef, HostListener, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 
-const GIF_PLAY_DURATION = 5000;
+// Cuántos ms se reproduce el gif antes de volver a la imagen estática
+const GIF_PLAY_MS = 5000;
 
 @Directive({ selector: 'img[lazyGif]', standalone: true })
 export class LazyGifDirective implements OnInit, OnDestroy {
@@ -9,6 +10,7 @@ export class LazyGifDirective implements OnInit, OnDestroy {
   private canvas: HTMLCanvasElement | null = null;
   private timer: ReturnType<typeof setTimeout> | null = null;
   private isGif = false;
+  private unlistenCanvas?: () => void;
 
   constructor(private el: ElementRef<HTMLImageElement>, private r2: Renderer2) {}
 
@@ -17,7 +19,6 @@ export class LazyGifDirective implements OnInit, OnDestroy {
     this.isGif = /\.gif(\?.*)?$/i.test(this.src);
 
     if (!this.isGif) {
-      // no es gif: se comporta como un [src] normal
       img.src = this.src;
       return;
     }
@@ -25,50 +26,48 @@ export class LazyGifDirective implements OnInit, OnDestroy {
     this.setupGif(img);
   }
 
-  // ─── Setup ──────────────────────────────────────────────────────────────────
-
   private setupGif(img: HTMLImageElement) {
-    // Crea canvas hermano con la misma clase CSS (hereda border-radius, tamaño, etc.)
+    // Creamos un <canvas> con la misma clase que el <img> para que herede
+    // el mismo tamaño y border-radius definidos en el CSS
     this.canvas = this.r2.createElement('canvas') as HTMLCanvasElement;
     this.canvas.className = img.className;
     this.r2.setStyle(this.canvas, 'display', 'none');
     this.r2.setStyle(this.canvas, 'cursor', 'pointer');
 
-    // Lo inserta justo después del img en el DOM
-    const parent = img.parentNode!;
-    this.r2.insertBefore(parent, this.canvas, img.nextSibling);
+    // Lo ponemos justo después del img en el DOM (van a convivir como hermanos)
+    this.r2.insertBefore(img.parentNode!, this.canvas, img.nextSibling);
 
-    // Carga el gif — { once: true } evita que reaccione a resets del src posteriores
+    // El hover va en el canvas porque es el que el usuario ve,
+    // el img queda oculto en display:none la mayor parte del tiempo
+    this.unlistenCanvas = this.r2.listen(this.canvas, 'mouseenter', () => this.play());
+
+    // Una vez que el gif cargó, sacamos el primer frame al canvas y ocultamos el img
     img.addEventListener('load', () => {
-      // requestAnimationFrame garantiza que el browser ya calculó las dimensiones del img
       requestAnimationFrame(() => {
-        this.captureFrame();   // dibuja primer frame en canvas
-        this.r2.setStyle(img, 'display', 'none');      // oculta img animado
-        this.r2.setStyle(this.canvas, 'display', ''); // muestra canvas estático
+        this.captureFrame();
+        this.r2.setStyle(img, 'display', 'none');
+        this.r2.setStyle(this.canvas, 'display', '');
       });
     }, { once: true });
 
+    // crossOrigin tiene que ir ANTES de asignar src, si no el canvas queda bloqueado
+    // por política de seguridad del navegador (las imágenes son de Cloudinary)
+    img.crossOrigin = 'anonymous';
     img.src = this.src;
   }
-
-  // ─── Captura un frame del img al canvas ─────────────────────────────────────
 
   private captureFrame() {
     const img    = this.el.nativeElement;
     const canvas = this.canvas!;
 
-    // Obtiene las dimensiones renderizadas del img (funciona mientras img está visible)
     const w = img.offsetWidth  || img.naturalWidth;
     const h = img.offsetHeight || img.naturalHeight;
     if (!w || !h) return;
 
+    // En pantallas el dpr es 2, así la imagen no queda pixelada
     const dpr = window.devicePixelRatio || 1;
-
-    // Buffer interno del canvas (alta resolución en pantallas Retina)
     canvas.width  = w * dpr;
     canvas.height = h * dpr;
-
-    // Tamaño visual que ve el usuario
     canvas.style.width  = `${w}px`;
     canvas.style.height = `${h}px`;
 
@@ -77,61 +76,45 @@ export class LazyGifDirective implements OnInit, OnDestroy {
 
     ctx.scale(dpr, dpr);
 
-    // Dibuja con lógica de object-fit: cover (recorta y centra como haría el CSS)
+    // Replicamos el comportamiento de object-fit: cover a mano,
+    // porque esa propiedad CSS no aplica a canvas
     const iw    = img.naturalWidth;
     const ih    = img.naturalHeight;
     const scale = Math.max(w / iw, h / ih);
     const sw    = iw * scale;
     const sh    = ih * scale;
-    const x     = (w - sw) / 2;
-    const y     = (h - sh) / 2;
+    const dx    = (w - sw) / 2;
+    const dy    = (h - sh) / 2;
 
     ctx.clearRect(0, 0, w, h);
-    ctx.drawImage(img, x, y, sw, sh);
+    ctx.drawImage(img, dx, dy, sw, sh);
   }
-
-  // ─── Eventos de mouse ───────────────────────────────────────────────────────
-
-  @HostListener('mouseenter')
-  onImgEnter() {
-    if (!this.isGif) return;
-    this.play();
-  }
-
-  // El canvas también tiene que responder al hover porque es el elemento visible
-  ngAfterViewInit?(): void {}
-
-  // ─── Lógica play / freeze ───────────────────────────────────────────────────
 
   private play() {
-    if (this.timer) clearTimeout(this.timer); // resetea el timer si ya estaba corriendo
+    // Si el usuario vuelve a hacer hover antes de que terminen los 5s,
+    // reseteamos el timer para que cuente desde cero de nuevo
+    if (this.timer) clearTimeout(this.timer);
 
     const img = this.el.nativeElement;
-
-    // Muestra img (gif se anima), oculta canvas estático
     this.r2.setStyle(this.canvas, 'display', 'none');
     this.r2.setStyle(img, 'display', '');
 
-    // Congela después de 5 segundos
-    this.timer = setTimeout(() => this.freeze(), GIF_PLAY_DURATION);
+    this.timer = setTimeout(() => this.freeze(), GIF_PLAY_MS);
   }
 
   private freeze() {
     this.timer = null;
     const img = this.el.nativeElement;
 
-    // El img está visible: captura el frame actual
+    // Aprovechamos que el img todavía está visible para capturar el frame actual
     this.captureFrame();
-
-    // Vuelve al canvas estático
     this.r2.setStyle(img, 'display', 'none');
     this.r2.setStyle(this.canvas, 'display', '');
   }
 
-  // ─── Limpieza ───────────────────────────────────────────────────────────────
-
   ngOnDestroy() {
     if (this.timer) clearTimeout(this.timer);
+    this.unlistenCanvas?.();
     if (this.canvas?.parentNode) {
       this.r2.removeChild(this.canvas.parentNode, this.canvas);
     }

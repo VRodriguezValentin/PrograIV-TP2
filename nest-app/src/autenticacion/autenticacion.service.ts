@@ -85,6 +85,28 @@ export class AutenticacionService {
     return { token, usuario: userData };
   }
 
+  async actualizarPerfil(
+    userId: string,
+    datos: { descripcion?: string; imagenPerfil?: string },
+  ): Promise<{ token: string; usuario: Record<string, unknown> }> {
+    const usuarioDoc = await this.usuariosService.actualizarPerfil(userId, datos);
+    const obj = usuarioDoc.toObject() as Record<string, unknown>;
+    const { contrasena: _, ...userData } = obj;
+    const token = this.signToken({
+      sub: (obj._id as object).toString(),
+      _id: (obj._id as object).toString(),
+      correo: obj.correo,
+      nombreUsuario: obj.nombreUsuario,
+      nombre: obj.nombre,
+      apellido: obj.apellido,
+      perfil: obj.perfil,
+      imagenPerfil: obj.imagenPerfil ?? '',
+      descripcion: obj.descripcion ?? '',
+      fechaNacimiento: obj.fechaNacimiento,
+    });
+    return { token, usuario: userData };
+  }
+
   verificarToken(token: string): Record<string, any> {
     try {
       return this.jwtService.verify(token, {

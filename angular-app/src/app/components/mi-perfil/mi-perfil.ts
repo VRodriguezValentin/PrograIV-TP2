@@ -6,10 +6,11 @@ import { AuthService } from '../../services/auth.service';
 import { PublicacionesService } from '../../services/publicaciones.service';
 import { Usuario } from '../../models/usuario';
 import { PublicacionData } from '../../models/publicacion-data';
+import { CharCounterDirective } from '../../directives/char-counter.directive';
 
 @Component({
   selector: 'app-mi-perfil',
-  imports: [RouterOutlet, Navbar, PublicacionComponent],
+  imports: [RouterOutlet, Navbar, PublicacionComponent, CharCounterDirective],
   templateUrl: './mi-perfil.html',
   styleUrl: './mi-perfil.css',
 })
@@ -17,6 +18,13 @@ export class MiPerfil implements OnInit {
   usuario = signal<Usuario | null>(null);
   misPublicaciones = signal<PublicacionData[]>([]);
   cargandoPosts = signal(false);
+
+  editando = signal(false);
+  guardando = signal(false);
+  descripcionEdit = signal('');
+  previewUrl = signal<string | null>(null);
+  errGuardar = signal('');
+  archivoSeleccionado: File | null = null;
 
   constructor(
     private authService: AuthService,
@@ -47,6 +55,58 @@ export class MiPerfil implements OnInit {
       '/' +
       year
     );
+  }
+
+  iniciarEdicion() {
+    const u = this.usuario();
+    this.descripcionEdit.set(u?.descripcion ?? '');
+    this.previewUrl.set(null);
+    this.archivoSeleccionado = null;
+    this.errGuardar.set('');
+    this.editando.set(true);
+  }
+
+  cancelarEdicion() {
+    this.editando.set(false);
+    this.previewUrl.set(null);
+    this.archivoSeleccionado = null;
+    this.errGuardar.set('');
+  }
+
+  onArchivo(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    this.archivoSeleccionado = file;
+    const reader = new FileReader();
+    reader.onload = () => this.previewUrl.set(reader.result as string);
+    reader.readAsDataURL(file);
+  }
+
+  guardar() {
+    if (this.guardando()) return;
+    this.guardando.set(true);
+    this.errGuardar.set('');
+
+    const fd = new FormData();
+    fd.append('descripcion', this.descripcionEdit());
+    if (this.archivoSeleccionado) {
+      fd.append('imagenPerfil', this.archivoSeleccionado);
+    }
+
+    this.authService.actualizarPerfil(fd).subscribe({
+      next: (usuario) => {
+        this.usuario.set(usuario);
+        this.guardando.set(false);
+        this.editando.set(false);
+        this.previewUrl.set(null);
+        this.archivoSeleccionado = null;
+      },
+      error: () => {
+        this.errGuardar.set('No se pudo guardar. Intentá de nuevo.');
+        this.guardando.set(false);
+      },
+    });
   }
 
   onDeletePost(id: string) {

@@ -4,6 +4,7 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
+  Patch,
   Post,
   Req,
   Res,
@@ -79,6 +80,30 @@ export class AutenticacionController {
     const newToken = this.autenticacionService.signToken(payload);
     res.cookie('nexo_token', newToken, COOKIE_OPTS);
     return { ok: true };
+  }
+
+  @Patch('perfil')
+  @HttpCode(HttpStatus.OK)
+  @UseInterceptors(FileInterceptor('imagenPerfil', multerConfig))
+  async actualizarPerfil(
+    @Req() req: any,
+    @Body() body: { descripcion?: string },
+    @UploadedFile() file: Express.Multer.File | undefined,
+    @Res({ passthrough: true }) res: any,
+  ) {
+    if (file && !file.mimetype.match(/\/(jpg|jpeg|webp|gif)$/)) {
+      throw new BadRequestException('Solo se permiten imágenes (jpg, jpeg, webp, gif)');
+    }
+    const userId = req.user._id as string;
+    const datos: { descripcion?: string; imagenPerfil?: string } = {};
+    if (body.descripcion !== undefined) datos.descripcion = body.descripcion;
+    if (file) {
+      datos.imagenPerfil = (await this.cloudinaryService.uploadToFolder(file, 'foto-perfil')).secure_url;
+    }
+    const { token, usuario } = await this.autenticacionService.actualizarPerfil(userId, datos);
+    // Re-emitimos el JWT actualizado para que /autorizar devuelva los datos frescos
+    res.cookie('nexo_token', token, COOKIE_OPTS);
+    return usuario;
   }
 
   @Public()

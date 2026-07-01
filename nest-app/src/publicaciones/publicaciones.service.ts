@@ -44,8 +44,6 @@ export class PublicacionesService {
       pipeline.push({ $sort: { createdAt: -1 } });
     }
 
-    pipeline.push({ $skip: offset });
-    pipeline.push({ $limit: limit });
     pipeline.push({
       $lookup: {
         from: 'usuarios',
@@ -53,11 +51,16 @@ export class PublicacionesService {
         foreignField: '_id',
         as: '_usuarioArr',
         pipeline: [
+          { $match: { activo: { $ne: false } } },
           { $project: { nombre: 1, apellido: 1, nombreUsuario: 1, imagenPerfil: 1 } },
         ],
       },
     });
+
     pipeline.push({ $unwind: '$_usuarioArr' });
+
+    pipeline.push({ $skip: offset });
+    pipeline.push({ $limit: limit });
     pipeline.push({ $addFields: { usuario: '$_usuarioArr' } });
     pipeline.push({ $addFields: { comentariosTotales: { $size: '$comentarios' } } });
     pipeline.push({ $addFields: { comentarios: [] } });
@@ -67,11 +70,16 @@ export class PublicacionesService {
   }
 
   async obtenerPorId(id: string) {
+
     const pub = (await this.publicacionModel
       .findOne({ _id: new Types.ObjectId(id), activo: true })
-      .populate('usuario', 'nombre apellido nombreUsuario imagenPerfil')
+      .populate('usuario', 'nombre apellido nombreUsuario imagenPerfil activo')
       .lean()) as any;
     if (!pub) throw new NotFoundException('Publicación no encontrada');
+
+    if (pub.usuario?.activo === false) throw new NotFoundException('Publicación no encontrada');
+
+    if (pub.usuario) delete pub.usuario.activo;
 
     return {
       ...pub,
@@ -82,16 +90,41 @@ export class PublicacionesService {
   }
 
   async obtenerComentarios(id: string, offset = 0, limit = 5) {
-    const pub = (await this.publicacionModel
-      .findById(id)
-      .select('comentarios activo')
-      .lean()) as any;
-    if (!pub || !pub.activo) throw new NotFoundException('Publicación no encontrada');
+    const pub = await this.publicacionModel
+      .findOne({ _id: new Types.ObjectId(id), activo: true })
+      .select('_id')
+      .lean();
+    if (!pub) throw new NotFoundException('Publicación no encontrada');
 
-    const all: any[] = [...(pub.comentarios ?? [])].sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    );
-    return { comentarios: all.slice(offset, offset + limit), total: all.length };
+    const result = await this.publicacionModel.aggregate([
+      { $match: { _id: new Types.ObjectId(id) } },
+      { $unwind: '$comentarios' },
+      { $sort: { 'comentarios.createdAt': -1 } },
+      {
+        $lookup: {
+          from: 'usuarios',
+          localField: 'comentarios.usuario._id',
+          foreignField: '_id',
+          as: '_autorComentario',
+          pipeline: [{ $project: { activo: 1 } }],
+        },
+      },
+      { $match: { '_autorComentario.0.activo': { $ne: false } } },
+      {
+        $facet: {
+          total: [{ $count: 'count' }],
+          comentarios: [
+            { $skip: offset },
+            { $limit: limit },
+            { $replaceRoot: { newRoot: '$comentarios' } },
+          ],
+        },
+      },
+    ]);
+
+    const total = result[0]?.total[0]?.count ?? 0;
+    const comentarios = result[0]?.comentarios ?? [];
+    return { comentarios, total };
   }
 
   async editarComentario(pubId: string, comentarioId: string, dto: EditarComentarioDto) {

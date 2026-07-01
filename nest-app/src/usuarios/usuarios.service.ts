@@ -66,4 +66,15 @@ export class UsuariosService {
     await usuario.save();
     return { ok: true };
   }
+
+  async actualizarPerfil(
+    id: string,
+    datos: { descripcion?: string; imagenPerfil?: string },
+  ): Promise<UsuarioDocument> {
+    const usuario = await this.usuarioModel.findById(id).exec();
+    if (!usuario) throw new NotFoundException('Usuario no encontrado');
+    if (datos.descripcion !== undefined) usuario.descripcion = datos.descripcion;
+    if (datos.imagenPerfil !== undefined) usuario.imagenPerfil = datos.imagenPerfil;
+    return usuario.save();
+  }
 }

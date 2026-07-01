@@ -32,6 +32,12 @@ export class AuthService {
     return this.http.post<{ ok: boolean }>(`${this.API_URL}/autenticacion/refrescar`, {});
   }
 
+  actualizarPerfil(formData: FormData): Observable<Usuario> {
+    return this.http
+      .patch<Usuario>(`${this.API_URL}/autenticacion/perfil`, formData)
+      .pipe(tap((usuario) => localStorage.setItem('usuario', JSON.stringify(usuario))));
+  }
+
   logout(): void {
     localStorage.removeItem('usuario');
     this.http.post(`${this.API_URL}/autenticacion/logout`, {}).subscribe();
