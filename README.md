@@ -1,114 +1,108 @@
-# Red Social - TP #2
+# NEXO — Red Social
 
-## Descripción
-
-Red Social es una aplicación web desarrollada como trabajo práctico utilizando Angular para el frontend, NestJS para el backend y MongoDB como base de datos.
-
-La plataforma permite a los usuarios registrarse, iniciar sesión, crear publicaciones, reaccionar con "Me gusta", comentar publicaciones y administrar su perfil personal.
-
-El sistema implementa autenticación mediante JWT, control de roles (usuario y administrador), paginación, carga de imágenes y estadísticas administrativas.
+> Una plataforma social moderna, segura y dinámica para compartir ideas, conectar personas y explorar contenido en un entorno interactivo.
 
 ---
 
-## Tecnologías utilizadas
+## ✨ Descripción del proyecto
 
-### Frontend
+NEXO es una red social desarrollada como trabajo práctico integrador, pensada para ofrecer una experiencia completa de interacción entre usuarios. La aplicación permite registrarse, iniciar sesión, crear publicaciones, reaccionar con me gustas, comentar contenido y administrar el perfil personal, todo dentro de una interfaz clara y funcional.
 
-* Angular
-* TypeScript
-* HTML5
-* CSS3 / SCSS
+El proyecto combina un frontend moderno con Angular, un backend robusto con NestJS y una base de datos NoSQL en MongoDB, logrando una solución escalable y organizada para aplicaciones sociales.
 
-### Backend
-
-* NestJS
-* TypeScript
-* JWT Authentication
-* bcrypt
-* Multer + Cloudinary
-
-### Base de datos
-
-* MongoDB
-* Mongoose
+[📥 Descargar PDF](https://raw.githubusercontent.com/VRodriguezValentin/PrograIV-TP2_Red-Social/main/docs/PROGRAMACION%20IV%20-%20TP%20%232%20-%20Completo%20-%202026.pdf)
 
 ---
 
-## Funcionalidades principales
+## 🌟 Características principales
 
-### Autenticación
+### Autenticación y seguridad
 
-* Registro de usuarios.
-* Inicio de sesión.
-* Contraseñas encriptadas.
-* Autenticación mediante JWT.
-* Validación y renovación de token.
-* Control de acceso mediante Guards.
+- Registro e inicio de sesión de usuarios.
+- Contraseñas protegidas mediante hashing con bcrypt.
+- Autenticación basada en JWT.
+- Control de acceso mediante guards y roles.
+- Validación de datos con DTOs.
 
 ### Gestión de usuarios
 
-* Visualización de perfil.
-* Edición de perfil.
-* Imagen de perfil.
-* Roles:
-
-  * Usuario
-  * Administrador
-* Alta y baja lógica de usuarios.
+- Creación y gestión de perfiles.
+- Edición de información personal.
+- Carga de imagen de perfil.
+- Roles de usuario y administrador.
+- Baja lógica de usuarios.
 
 ### Publicaciones
 
-* Crear publicaciones.
-* Listar publicaciones.
-* Eliminar publicaciones propias.
-* Baja lógica de publicaciones.
-* Imagen opcional por publicación.
-* Ordenamiento por:
+- Creación de publicaciones con texto e imagen opcional.
+- Visualización de contenido en listado dinámico.
+- Eliminación de publicaciones propias.
+- Ordenamiento por fecha y cantidad de reacciones.
+- Paginación de resultados.
 
-  * Fecha
-  * Cantidad de Me Gusta
-* Paginación de resultados.
+### Reacciones y comentarios
 
-### Reacciones
-
-* Dar Me Gusta.
-* Quitar Me Gusta.
-* Un único Me Gusta por usuario y publicación.
-
-### Comentarios
-
-* Crear comentarios.
-* Editar comentarios propios.
-* Identificación de comentarios editados.
-* Paginación de comentarios.
-* Ordenamiento por fecha.
+- Dar y quitar me gustas.
+- Un único me gusta por usuario y publicación.
+- Comentarios en publicaciones.
+- Edición de comentarios propios.
+- Identificación visual de comentarios modificados.
+- Paginación y orden por fecha.
 
 ### Administración
 
-* Dashboard de usuarios.
-* Dashboard de estadísticas.
-* Gestión de usuarios.
-* Gestión de publicaciones.
-* Acceso restringido para administradores.
-
-### Estadísticas
-
-* Publicaciones realizadas por usuario.
-* Comentarios realizados en un período.
-* Comentarios por publicación.
-* Visualización mediante gráficos.
+- Panel de administración para usuarios.
+- Dashboard con estadísticas generales.
+- Gestión de publicaciones y usuarios.
+- Acceso restringido exclusivamente para administradores.
 
 ---
 
-## Instalación
+## �🛠️ Tecnologías utilizadas
 
-### Clonar repositorio
+### Frontend
+
+- Angular
+- TypeScript
+- HTML5
+- CSS3 / SCSS
+
+### Backend
+
+- NestJS
+- TypeScript
+- JWT Authentication
+- bcrypt
+- Multer + Cloudinary
+
+### Base de datos
+
+- MongoDB
+- Mongoose
+
+---
+
+## 🧩 Arquitectura del sistema
+
+La aplicación sigue una arquitectura modular y separada por responsabilidades:
+
+- Frontend: interfaz de usuario interactiva y responsiva.
+- Backend: lógica de negocio, autenticación, validaciones y control de acceso.
+- Base de datos: almacenamiento de usuarios, publicaciones, comentarios y reacciones.
+
+Esta estructura facilita el mantenimiento, la escalabilidad y la futura incorporación de nuevas funcionalidades.
+
+---
+
+## ▶️ Instalación y ejecución
+
+### 1. Clonar el repositorio
 
 ```bash
 git clone <url-del-repositorio>
 ```
 
-### Backend
+### 2. Backend
 
 ```bash
 cd nest-app
@@ -117,7 +111,7 @@ cp .env.example .env
 npm run start:dev
 ```
 
-### Frontend
+### 3. Frontend
 
 ```bash
 cd angular-app
@@ -127,21 +121,11 @@ ng serve
 
 ---
 
-## Seguridad
+## 📊 Estado del proyecto
 
-* Contraseñas almacenadas utilizando bcrypt.
-* Tokens JWT con expiración de 15 minutos.
-* Validación de roles.
-* Protección de rutas privadas.
-* Validación de datos mediante DTOs.
+El proyecto fue desarrollado mediante una metodología incremental por sprints:
 
----
-
-## Estado del proyecto
-
-Proyecto desarrollado siguiendo metodología incremental mediante sprints:
-
-* Sprint 1: Autenticación y usuarios.
-* Sprint 2: Publicaciones y Me Gusta.
-* Sprint 3: Comentarios y manejo de sesión.
-* Sprint 4: Administración y estadísticas.
+- Sprint 1: Autenticación y gestión de usuarios.
+- Sprint 2: Publicaciones y sistema de me gustas.
+- Sprint 3: Comentarios y manejo de sesión.
+- Sprint 4: Administración y estadísticas.
