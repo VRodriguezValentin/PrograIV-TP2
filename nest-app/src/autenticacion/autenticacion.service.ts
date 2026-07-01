@@ -63,10 +63,10 @@ export class AutenticacionService {
     const usuario = await this.usuariosService.findByIdentificador(dto.identificador);
     if (!usuario) throw new UnauthorizedException('Credenciales inválidas');
 
-    if (!usuario.activo) throw new UnauthorizedException('Tu cuenta ha sido deshabilitada. Contacta con el soporte para más información.');
-
     const ok = await bcrypt.compare(dto.contrasena, usuario.contrasena);
     if (!ok) throw new UnauthorizedException('Credenciales inválidas');
+
+    if (!usuario.activo) throw new UnauthorizedException('Tu cuenta ha sido deshabilitada. Contacta con el soporte para más información.');
 
     const obj = usuario.toObject() as Record<string, unknown>;
     const { contrasena: _, ...userData } = obj;

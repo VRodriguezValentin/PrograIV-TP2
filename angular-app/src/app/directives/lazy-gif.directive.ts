@@ -27,21 +27,21 @@ export class LazyGifDirective implements OnInit, OnDestroy {
   }
 
   private setupGif(img: HTMLImageElement) {
-    // Creamos un <canvas> con la misma clase que el <img> para que herede
-    // el mismo tamaño y border-radius definidos en el CSS
+    // Creamos un <canvas> con la misma clase que el <img> para que herede 
+    // el mismo tamaño y border-radius definidos en el CSS 
     this.canvas = this.r2.createElement('canvas') as HTMLCanvasElement;
     this.canvas.className = img.className;
     this.r2.setStyle(this.canvas, 'display', 'none');
     this.r2.setStyle(this.canvas, 'cursor', 'pointer');
 
-    // Lo ponemos justo después del img en el DOM (van a convivir como hermanos)
+    // Lo ponemos justo despues del img en el DOM
     this.r2.insertBefore(img.parentNode!, this.canvas, img.nextSibling);
 
-    // El hover va en el canvas porque es el que el usuario ve,
-    // el img queda oculto en display:none la mayor parte del tiempo
+    // El hover va en el canvas porque es el que el usuario ve, 
+    // el img queda oculto en display:none la mayor parte del tiempo 
     this.unlistenCanvas = this.r2.listen(this.canvas, 'mouseenter', () => this.play());
 
-    // Una vez que el gif cargó, sacamos el primer frame al canvas y ocultamos el img
+    // Una vez que el gif cargo, sacamos el primer frame al canvas y ocultamos el img 
     img.addEventListener('load', () => {
       requestAnimationFrame(() => {
         this.captureFrame();
@@ -50,8 +50,8 @@ export class LazyGifDirective implements OnInit, OnDestroy {
       });
     }, { once: true });
 
-    // crossOrigin tiene que ir ANTES de asignar src, si no el canvas queda bloqueado
-    // por política de seguridad del navegador (las imágenes son de Cloudinary)
+    // crossOrigin tiene que ir ANTES de asignar src, si no el canvas queda bloqueado 
+    // por politica de seguridad del navegador (las imagenes son de Cloudinary) 
     img.crossOrigin = 'anonymous';
     img.src = this.src;
   }
@@ -64,7 +64,7 @@ export class LazyGifDirective implements OnInit, OnDestroy {
     const h = img.offsetHeight || img.naturalHeight;
     if (!w || !h) return;
 
-    // En pantallas el dpr es 2, así la imagen no queda pixelada
+    // En pantallas el dpr es 2, asi la imagen no queda pixelada 
     const dpr = window.devicePixelRatio || 1;
     canvas.width  = w * dpr;
     canvas.height = h * dpr;
@@ -76,8 +76,8 @@ export class LazyGifDirective implements OnInit, OnDestroy {
 
     ctx.scale(dpr, dpr);
 
-    // Replicamos el comportamiento de object-fit: cover a mano,
-    // porque esa propiedad CSS no aplica a canvas
+    // Replicamos el comportamiento de object-fit: cover a mano, 
+    // porque esa propiedad CSS no aplica a canvas 
     const iw    = img.naturalWidth;
     const ih    = img.naturalHeight;
     const scale = Math.max(w / iw, h / ih);
@@ -91,8 +91,8 @@ export class LazyGifDirective implements OnInit, OnDestroy {
   }
 
   private play() {
-    // Si el usuario vuelve a hacer hover antes de que terminen los 5s,
-    // reseteamos el timer para que cuente desde cero de nuevo
+    // Si el usuario vuelve a hacer hover antes de que terminen los 5s, 
+    // reseteamos el timer para que cuente desde cero de nuevo 
     if (this.timer) clearTimeout(this.timer);
 
     const img = this.el.nativeElement;
@@ -106,7 +106,7 @@ export class LazyGifDirective implements OnInit, OnDestroy {
     this.timer = null;
     const img = this.el.nativeElement;
 
-    // Aprovechamos que el img todavía está visible para capturar el frame actual
+    // Aprovechamos que el img todavia está visible para capturar el frame actual 
     this.captureFrame();
     this.r2.setStyle(img, 'display', 'none');
     this.r2.setStyle(this.canvas, 'display', '');
