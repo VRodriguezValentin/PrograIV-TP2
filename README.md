@@ -1,12 +1,12 @@
 # NEXO — Red Social
 
-> Una plataforma social moderna, segura y dinámica para compartir ideas, conectar personas y explorar contenido en un entorno interactivo.
+> Una red social para la comunidad gamer que permite compartir publicaciones, interactuar mediante reacciones y comentarios, y conectar con otros jugadores en una plataforma moderna y segura.
 
 ---
 
 ## ✨ Descripción del proyecto
 
-NEXO es una red social desarrollada como trabajo práctico integrador, pensada para ofrecer una experiencia completa de interacción entre usuarios. La aplicación permite registrarse, iniciar sesión, crear publicaciones, reaccionar con me gustas, comentar contenido y administrar el perfil personal, todo dentro de una interfaz clara y funcional.
+NEXO es una aplicación web desarrollada como trabajo práctico integrador de Programación IV. El objetivo del proyecto fue diseñar e implementar una red social completa aplicando una arquitectura cliente-servidor, autenticación de usuarios, persistencia de datos y buenas prácticas de desarrollo.
 
 El proyecto combina un frontend moderno con Angular, un backend robusto con NestJS y una base de datos NoSQL en MongoDB, logrando una solución escalable y organizada para aplicaciones sociales.
 
